@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!-- debug config -->
+<launch>
+	<copy file="map.net.xml" />
+	<copy file="map.rou.xml" />
+	<copy file="gridview.xml"/>
+	<copy file="map.poly.xml" />
+	<copy file="map.sumo.cfg" type="config" />
+
+</launch>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 09/18/19 20:08:36 by Eclipse SUMO duarouter Version 1.0.0
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/duarouterConfiguration.xsd">
+
+    <input>
+        <net-file value="grid.net.xml"/>
+        <route-files value="trips.trips.xml"/>
+    </input>
+
+    <output>
+        <output-file value="grid.rou.xml"/>
+        <alternatives-output value="grid.rou.alt.xml"/>
+    </output>
+
+</configuration>
+-->
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    <vehicle id="0" depart="0.00">
+        <route edges="gneE9 gneE23"/>
+    </vehicle>
+    <vehicle id="1" depart="1.00">
+        <route edges="-gneE9 -gneE1 gneE2 gneE4 -gneE5 gneE12"/>
+    </vehicle>
+    <vehicle id="2" depart="2.00">
+        <route edges="-gneE4 gneE10 -gneE11"/>
+    </vehicle>
+    <vehicle id="3" depart="3.00">
+        <route edges="gneE7"/>
+    </vehicle>
+    <vehicle id="4" depart="4.00">
+        <route edges="gneE5 -gneE4 -gneE2 gneE1 gneE9 gneE23"/>
+    </vehicle>
+    <vehicle id="5" depart="5.00">
+        <route edges="gneE6"/>
+    </vehicle>
+    <vehicle id="6" depart="6.00">
+        <route edges="gneE5 -gneE4 -gneE2 gneE1 gneE9 gneE24"/>
+    </vehicle>
+    <vehicle id="7" depart="7.00">
+        <route edges="-gneE20 gneE6 gneE5 gneE13"/>
+    </vehicle>
+    <vehicle id="8" depart="8.00">
+        <route edges="gneE4 -gneE5 gneE12 gneE3 gneE7"/>
+    </vehicle>
+    <vehicle id="9" depart="9.00">
+        <route edges="gneE1 gneE11 -gneE10 gneE4 gneE14"/>
+    </vehicle>
+</routes>

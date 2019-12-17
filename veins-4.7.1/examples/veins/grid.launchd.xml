@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!-- debug config -->
+<launch>
+	<copy file="grid.net.xml" />
+	<copy file="grid.rou.xml" />
+	<copy file="gridview.xml"/>
+	<copy file="grid.poly.xml" />
+	<copy file="grid.sumo.cfg" type="config" />
+
+</launch>

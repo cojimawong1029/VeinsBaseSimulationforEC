@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- generated on Wed Nov 30 12:18:34 2011 by SUMO polyconvert Version 0.13.1
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.sf.net/xsd/polyconvertConfiguration.xsd">
+
+    <input>
+        <osm-files value="erlangen.osm"/>
+        <osm.keep-full-type value="false"/>
+        <type-file value="erlangen.polytypes.xml"/>
+    </input>
+
+    <output>
+        <output-file value="erlangen.poly.xml"/>
+    </output>
+
+    <projection>
+        <proj.utm value="true"/>
+    </projection>
+
+</configuration>
+-->
+
+<shapes>
+    <poly id="112552150" type="building" color="1.00,0.00,0.00" fill="1" layer="4" shape="5,5 5,15 15,15 5,15 5,5"/>
+</shapes>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 09/18/19 20:22:39 by Eclipse SUMO duarouter Version 1.0.0
+<!-- generated on 09/18/19 20:08:36 by Eclipse SUMO duarouter Version 1.0.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/duarouterConfiguration.xsd">
 
     <input>
@@ -18,63 +18,33 @@
 
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
     <vehicle id="0" depart="0.00">
-        <route edges="-gneE18 -gneE6 gneE20"/>
+        <route edges="gneE9 gneE23"/>
     </vehicle>
     <vehicle id="1" depart="1.00">
-        <route edges="gneE5 -gneE4 -gneE2 gneE3"/>
+        <route edges="-gneE9 -gneE1 gneE2 gneE4 -gneE5 gneE12"/>
     </vehicle>
     <vehicle id="2" depart="2.00">
-        <route edges="-gneE24 -gneE9 -gneE1 gneE3 gneE8"/>
+        <route edges="-gneE4 gneE10 -gneE11"/>
     </vehicle>
     <vehicle id="3" depart="3.00">
-        <route edges="gneE4 -gneE5 gneE12 gneE1 gneE11"/>
+        <route edges="gneE7"/>
     </vehicle>
     <vehicle id="4" depart="4.00">
-        <route edges="-gneE20 gneE6 gneE12 gneE1 gneE19"/>
+        <route edges="gneE5 -gneE4 -gneE2 gneE1 gneE9 gneE23"/>
     </vehicle>
     <vehicle id="5" depart="5.00">
-        <route edges="-gneE22 gneE7 gneE20"/>
+        <route edges="gneE6"/>
     </vehicle>
     <vehicle id="6" depart="6.00">
-        <route edges="-gneE5 gneE12 gneE2 gneE10 -gneE11"/>
+        <route edges="gneE5 -gneE4 -gneE2 gneE1 gneE9 gneE24"/>
     </vehicle>
     <vehicle id="7" depart="7.00">
-        <route edges="-gneE16 -gneE10 -gneE2 -gneE0 -gneE6"/>
+        <route edges="-gneE20 gneE6 gneE5 gneE13"/>
     </vehicle>
     <vehicle id="8" depart="8.00">
-        <route edges="gneE3 gneE8 gneE23"/>
+        <route edges="gneE4 -gneE5 gneE12 gneE3 gneE7"/>
     </vehicle>
     <vehicle id="9" depart="9.00">
-        <route edges="-gneE9 gneE11 gneE17"/>
-    </vehicle>
-    <vehicle id="10" depart="10.00">
-        <route edges="-gneE11 gneE9 gneE24"/>
-    </vehicle>
-    <vehicle id="11" depart="11.00">
-        <route edges="gneE7 gneE6 gneE12 gneE2 gneE10"/>
-    </vehicle>
-    <vehicle id="12" depart="12.00">
-        <route edges="gneE3 gneE7"/>
-    </vehicle>
-    <vehicle id="13" depart="13.00">
-        <route edges="-gneE0 gneE5 gneE13"/>
-    </vehicle>
-    <vehicle id="14" depart="14.00">
-        <route edges="-gneE18 gneE5 -gneE4"/>
-    </vehicle>
-    <vehicle id="15" depart="15.00">
-        <route edges="-gneE3 gneE2 gneE4 -gneE5"/>
-    </vehicle>
-    <vehicle id="16" depart="16.00">
-        <route edges="-gneE11 gneE9 gneE23"/>
-    </vehicle>
-    <vehicle id="17" depart="17.00">
-        <route edges="gneE5 -gneE4 gneE10 gneE17"/>
-    </vehicle>
-    <vehicle id="18" depart="18.00">
-        <route edges="-gneE0 -gneE6 -gneE7 -gneE3 gneE1 gneE9"/>
-    </vehicle>
-    <vehicle id="19" depart="19.00">
-        <route edges="-gneE5 gneE12 gneE3 gneE22"/>
+        <route edges="gneE1 gneE11 -gneE10 gneE4 gneE14"/>
     </vehicle>
 </routes>

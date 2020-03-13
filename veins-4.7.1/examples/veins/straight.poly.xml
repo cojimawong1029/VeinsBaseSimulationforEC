@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- generated on Wed Nov 30 12:18:34 2011 by SUMO polyconvert Version 0.13.1
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.sf.net/xsd/polyconvertConfiguration.xsd">
+
+</configuration>
+-->
+
+<shapes>
+
+    <poly id="1" type="building" color="1.00,0.00,0.00" fill="1" layer="1" shape="0,5 15,5 15,10 0,10 "/>
+    <poly id="2" type="building" color="1.00,0.00,0.00" fill="1" layer="1" shape="20,5 35,5 35,15 20,15 "/>
+
+
+
+</shapes>

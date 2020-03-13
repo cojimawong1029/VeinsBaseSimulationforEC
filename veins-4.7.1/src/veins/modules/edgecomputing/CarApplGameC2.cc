@@ -24,14 +24,16 @@ CarApplGameC2::~CarApplGameC2() {
 void CarApplGameC2::handleSelfMsg(cMessage* msg) {
     if (msg == startTaskMsg) {
        // simtime_t TaskDuration = par("TaskDuration");
-        scheduleAt(simTime() +  exponential(taskGeneInterval), stopTaskMsg);
+        //scheduleAt(simTime() +  exponential(taskGeneInterval), stopTaskMsg);
+        scheduleAt(simTime() +  taskGeneInterval, stopTaskMsg);
+
 
         TaskRequest * tsk = new TaskRequest("taskRequest");
         generateTasksCount++;
 
         tsk->setTaskownerid(getId());
         tsk->setTasksendid(lastTaskSendId++);
-        tsk->setMi(100.0+normal(0.0, 10.0));
+        tsk->setMi(95+normal(0.0, 10.0));
         tsk->setStme(1.0+normal(0.0, 1.0));
         tsk->setDyme(1.0+normal(0.0, 1.0));
         tsk->setDeadline(0.1);
@@ -75,8 +77,8 @@ void CarApplGameC2::handleSelfMsg(cMessage* msg) {
         TaskCount--;
         //issend = true;
         if (rsudelay > 0.5||tsk->getPurchexe()==0) {
-            //send(tsk, "taskManager$o");//将计算任务放到本地执行
-            cancelAndDelete(tsk);
+            send(tsk, "taskManager$o");//将计算任务放到本地执行
+            //cancelAndDelete(tsk);
         } else {
             offLoad(tsk);
 //            send(tsk, "taskManager$o");

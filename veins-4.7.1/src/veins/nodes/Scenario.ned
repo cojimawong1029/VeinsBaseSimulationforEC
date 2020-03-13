@@ -35,25 +35,25 @@ network Scenario
         @display("bgb=$playgroundSizeX,$playgroundSizeY");
     submodules:
         obstacles: ObstacleControl {
-            @display("p=201,0");
+            @display("p=201,0;is=vs");
         }
         annotations: AnnotationManager {
-            @display("p=279,0");
+            @display("p=279,0;is=vs");
         }
         connectionManager: ConnectionManager {
             parameters:
-                @display("p=111,0;i=abstract/multicast");
+                @display("p=111,0;i=abstract/multicast;is=vs");
         }
         world: BaseWorldUtility {
             parameters:
                 playgroundSizeX = playgroundSizeX;
                 playgroundSizeY = playgroundSizeY;
                 playgroundSizeZ = playgroundSizeZ;
-                @display("p=30,0;i=misc/globe");
+                @display("p=30,0;i=misc/globe;is=vs");
         }
         manager: TraCIScenarioManagerLaunchd {
             parameters:
-                @display("p=330,0");
+                @display("p=330,0;is=vs");
         }
 
     connections allowunconnected:

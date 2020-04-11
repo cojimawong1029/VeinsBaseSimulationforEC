@@ -28,7 +28,7 @@ import org.car2x.veins.modules.edgecomputing.*;
 module CarNode2
 {
     parameters:
-        string applType=default("org.car2x.veins.modules.edgecomputing.CarAppl"); //type of the application layer
+        
         string nicType = default("Nic80211p"); // type of network interface card
         string veinsmobilityType = default("org.car2x.veins.modules.mobility.traci.TraCIMobility"); //type of the mobility module
         string cpuType = default("ComputerOnBoard");

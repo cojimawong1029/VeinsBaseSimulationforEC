@@ -315,6 +315,7 @@ enum Decider80211p::PACKET_OK_RESULT Decider80211p::packetOk(double snirMin, dou
 			else {
 				//yes. we would have decoded that without interference
 				return COLLISION;
+			    //return DECODED;
 			}
 
 		}

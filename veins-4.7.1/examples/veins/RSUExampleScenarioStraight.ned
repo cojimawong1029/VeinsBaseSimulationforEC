@@ -13,32 +13,33 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
+import org.car2x.veins.modules.edgecomputing.EdgeServerMAOCO;
 import org.car2x.veins.modules.edgecomputing.EdgeServer;
 import org.car2x.veins.nodes.Scenario;
-import org.car2x.veins.modules.edgecomputing.CloudServer;
+import org.car2x.veins.modules.edgecomputing.CloudServerMAOCO;
 import org.car2x.veins.modules.edgecomputing.EvaluateModule.EvaluateModule;
 
 network RSUExampleScenarioStraight extends Scenario
 {
     //@display("bgi=maps/grid,s;bgb=2500,2500;bgu=,");
     submodules:
-        rsu1: EdgeServer {
+        rsu1: EdgeServerMAOCO {
             @display("p=1,50;is=l");
         }
-        rsu2: EdgeServer {
+        rsu2: EdgeServerMAOCO {
             @display("p=250,50;is=l");
         }
-        rsu3: EdgeServer {
+        rsu3: EdgeServerMAOCO {
             @display("p=500,50;is=l");
         }
-        rsu4: EdgeServer {
+        rsu4: EdgeServerMAOCO {
             @display("p=750,50;is=l");
         }
-        rsu5: EdgeServer {
+        rsu5: EdgeServerMAOCO {
             @display("p=999,50;is=l");
         }
 
-        cloud: CloudServer {
+        cloud: CloudServerMAOCO {
             @display("p=1053,151;is=l");
         }
 

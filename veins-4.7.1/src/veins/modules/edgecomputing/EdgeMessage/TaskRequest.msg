@@ -32,6 +32,11 @@ packet TaskRequest {
     int DataByteLength;
     int cloudGate;
     double lastTime;
+   
+    
+//    int IsMigration=0;
+//    int MigrationID;
+//    int IsCloud=0;
     
     //the data in the procotol
     
@@ -40,7 +45,7 @@ packet TaskRequest {
     double deadline;
     int priority;
     
-    
+    int psid=12;
     bool batchPFlag=false;
     double geneRate;
     double tTh;
@@ -59,6 +64,11 @@ packet TaskRequest {
     
     int purchexe=0;
     
+    //MAOCO-related
+    bool isMigration=0;
+	int TargetMigrationID;
+	bool isCloudExecution=0;
+    bool CloudToEdgeExe=0;
     
     
     

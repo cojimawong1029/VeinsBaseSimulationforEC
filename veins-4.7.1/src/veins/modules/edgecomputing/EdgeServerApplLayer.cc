@@ -1,4 +1,4 @@
-#include "veins/modules/edgecomputing/EdgeServerApplLayer.h"
+#include <veins/modules/edgecomputing/EdgeServerApplLayer.h>
 #include "veins/modules/edgecomputing/EdgeMessage/TaskRequest_m.h"
 
 
@@ -26,12 +26,8 @@ void EdgeServerApplLayer::onWSM(WaveShortMessage* wsm) {
 
         } else {
             sendDelayed(tsk->dup(),0.1, "cloud$o");
-
         }
-
     }
-
-
 }
 
 void EdgeServerApplLayer::initialize(int stage) {
@@ -46,22 +42,22 @@ void EdgeServerApplLayer::initialize(int stage) {
         pingMsg = new cMessage("ping");
         pingInterval = par("pingInterval");
         scheduleAt(simTime(), pingMsg);
+
+
+
         WATCH(queue);
         WATCH(appldelay);
         WATCH(ujc);
         WATCH(pricecloud);
         //getSimulation()->getSystemModule()->subscribe("ujc",this);
-
-
-
         WATCH(uj);
         WATCH(test);
-
         WATCH(maxp);
         WATCH(minp);
         WATCH(numofcons);
         WATCH(gateind);
-        WATCH(numr);
+        //WATCH(numr);
+
 
 
 
@@ -72,6 +68,7 @@ void EdgeServerApplLayer::initialize(int stage) {
         px=par("lowprice");
         py=par("changerate");
         tau=par("changeindictor");
+
 
 
         dso=new Nature(px,py,tau);

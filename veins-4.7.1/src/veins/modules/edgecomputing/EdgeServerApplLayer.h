@@ -3,6 +3,8 @@
 
 #include "veins/modules/application/ieee80211p/BaseWaveApplLayer.h"
 #include "veins/modules/edgecomputing/GameTheory/Nature.h"
+#include "veins/base/utils/Coord.h"
+
 
 class EdgeServerApplLayer : public BaseWaveApplLayer {
 	protected:
@@ -60,6 +62,8 @@ class EdgeServerApplLayer : public BaseWaveApplLayer {
     cOutVector ujss;
 
     double gateind{0};
+
+
 
 
 

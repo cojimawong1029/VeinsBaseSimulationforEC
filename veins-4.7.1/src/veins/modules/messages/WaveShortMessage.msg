@@ -18,6 +18,11 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+//custom
+cplusplus {{
+#include "veins/base/utils/Coord.h"
+}}
+
 packet WaveShortMessage {
 	//Version of the Wave Short Message
 	int wsmVersion = 0;
@@ -43,7 +48,8 @@ packet WaveShortMessage {
 	int serial = 0;
 	simtime_t timestamp = 0;
 	
-	
+	//custom
 	double RiE;
 	double RiC;
+	//double testO;
 }

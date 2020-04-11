@@ -38,14 +38,25 @@ void  EvaluateModule::receiveSignal(cComponent *source, simsignal_t signalID, do
 //                }
     }
 
+
+void  EvaluateModule::receiveSignal(cComponent *source, simsignal_t signalID, bool d, cObject *details){
+        std::string name=getSignalName(signalID);
+        if(!name.compare("sigCollision")){
+            colltimes.record((double)d);
+        }
+    }
+
+
 void EvaluateModule::initialize(){
     getParentModule()->subscribe("applDelays", this);
     getParentModule()->subscribe("applCompeleteRate", this);
     getParentModule()->subscribe("occucloud", this);
+    getParentModule()->subscribe("sigCollision", this);
 
 //    getParentModule()->subscribe("queueLength", this);
     applDelays.setName("Appl Layer Delays");
     applCompeleteRate.setName("Appl Compelete Rate");
+    colltimes.setName("coll times");
     WATCH(ujc);
 
 }

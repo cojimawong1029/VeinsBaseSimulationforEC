@@ -34,12 +34,13 @@ class EvaluateModule : public cSimpleModule , public cListener
 
     //virtual void receiveSignal(cComponent *source, simsignal_t signalID, long l, cObject *details);
     virtual void receiveSignal(cComponent *source, simsignal_t signalID, double d, cObject *details);
-
+    virtual void receiveSignal(cComponent *source, simsignal_t signalID, bool d, cObject *details);
 
 
   protected:
     cOutVector applDelays;
     cOutVector applCompeleteRate;
+    cOutVector colltimes;
 
 
 

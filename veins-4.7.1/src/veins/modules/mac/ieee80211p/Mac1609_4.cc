@@ -400,6 +400,7 @@ void Mac1609_4::handleLowerControl(cMessage* msg) {
 	else if (msg->getKind() == Decider80211p::BITERROR || msg->getKind() == Decider80211p::COLLISION) {
 		statsSNIRLostPackets++;
 		DBG_MAC << "A packet was not received due to biterrors" << std::endl;
+		//emit(sigCollision, true);
 	}
 	else if (msg->getKind() == Decider80211p::RECWHILESEND) {
 		statsTXRXLostPackets++;

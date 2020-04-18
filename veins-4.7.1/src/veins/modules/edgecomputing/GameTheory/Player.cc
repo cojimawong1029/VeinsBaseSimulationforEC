@@ -23,6 +23,11 @@ double Player::getUtilityPre(double qi, double data, double datarate,double pi,d
     return alapha*pow((1/texe*tth),beta)-gamma*qi*pi;
 }
 
+double Player::getEWwithK(double qi,double K){
+    double rou=this->lambda/qi/(this->mu/K);
+    return (1/qi/(this->mu/K))+(this->lambda*(pow((1/qi/(this->mu/K)),2)))/(2*(1-rou));
+}
+
 double Player::getEW(double qi){
     double rou=this->lambda/qi/this->mu;
     return (1/qi/this->mu)+(this->lambda*(pow((1/qi/this->mu),2)))/(2*(1-rou));
@@ -66,8 +71,8 @@ double Player::iterQ(){
     double qi=0.5*(qp_1+qp_2)+delta;
     if(qi>30){
         qi=30;
-    }else if(qi<1){
-        qi=1;
+    }else if(qi<1.001){
+        qi=1.001;
     }
     return qi;
 }

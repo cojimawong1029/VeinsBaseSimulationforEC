@@ -10,6 +10,7 @@
 					<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.base.7659449" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.base">
 						<option id="gnu.cpp.compiler.option.include.paths.1086707691" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 							<listOptionValue builtIn="false" value="${ProjDirPath}/src"/>
+							<listOptionValue builtIn="false" value="&quot;C:\gurobi901\win64\include&quot;"/>
 						</option>
 						<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.793944766" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 					</tool>
@@ -18,6 +19,13 @@
 					</tool>
 					<tool id="cdt.managedbuild.tool.gnu.c.linker.base.33157182" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base"/>
 					<tool id="cdt.managedbuild.tool.gnu.cpp.linker.base.1823595887" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.base">
+						<option id="gnu.cpp.link.option.paths.368187814" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
+							<listOptionValue builtIn="false" value="&quot;C:\gurobi901\win64\lib&quot;"/>
+						</option>
+						<option id="gnu.cpp.link.option.libs.679449916" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
+							<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="&quot;C:\gurobi901\win64\lib\gurobi90.lib&quot;"/>
+							<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="&quot;C:\gurobi901\win64\lib\gurobi_c++md2017.lib&quot;"/>
+						</option>
 						<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1438656455" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 							<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 							<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -28,6 +36,9 @@
 					</tool>
 				</toolChain>
 			</folderInfo>
+			<sourceEntries>
+				<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+			</sourceEntries>
 		</configuration>
 	</storageModule>
 </cproject>

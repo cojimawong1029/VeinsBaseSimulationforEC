@@ -28,6 +28,9 @@
 					</tool>
 				</toolChain>
 			</folderInfo>
+			<sourceEntries>
+				<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+			</sourceEntries>
 		</configuration>
 	</storageModule>
 </cproject>

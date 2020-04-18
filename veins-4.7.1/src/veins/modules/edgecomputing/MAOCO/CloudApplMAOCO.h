@@ -16,7 +16,7 @@
 #include "veins/modules/messages/WaveShortMessage_m.h"
 #include "veins/modules/messages/WaveServiceAdvertisement_m.h"
 #include "veins/modules/messages/BasicSafetyMessage_m.h"
-#include "veins/modules/edgecomputing/GameTheory/DSO.h"
+#include "veins/modules/edgecomputing/GameTheory/Nature.h"
 #include "veins/modules/edgecomputing/EdgeMessage/TaskRequest_m.h"
 
 #include <map>
@@ -38,7 +38,7 @@ class CloudApplMAOCO : public cSimpleModule,  public cListener
     cMessage *endTxEvent;
     int cpu;
     cQueue txQueue;
-    double queue=56;
+    double queue{0};
     simsignal_t test;
     simsignal_t price;
 
@@ -93,11 +93,13 @@ class CloudApplMAOCO : public cSimpleModule,  public cListener
     cOutVector beneHis;
 
 
-    DSO* dso;
+    Nature* nature;
 
 /*****************MAOCO related*************************/
     std::map<int,int> RSUtoGates;
     int MigrationTimes{0};
+
+    double migrationCost;
 
 
 /****************For Testing**************************/

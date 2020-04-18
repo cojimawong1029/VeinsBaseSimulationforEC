@@ -48,6 +48,14 @@ simple CarApplMAOCO extends BaseWaveApplLayer
         double handleRate=default(10);
         double tTh=default(0.1);
         double learnningRate=default(0.5);
+        
+        //MAOCO related
+        double VinLya=default(2);
+        double alphainLya=default(1);
+        double betainLya=default(50);
+        double gammainLya=default(1);
+        
+        int chosenRSUway=default(1);
   
 
 

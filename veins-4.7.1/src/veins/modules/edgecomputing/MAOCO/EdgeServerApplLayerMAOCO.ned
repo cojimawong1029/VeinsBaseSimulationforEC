@@ -33,6 +33,7 @@ import org.car2x.veins.modules.application.ieee80211p.BaseWaveApplLayer;
         double changerate=default(2);
         double changeindictor=default(1.1);
         int channelUsed=default(174);
+
 	    
 	    //int headerLength @unit("bit");
 	   // bool sendBeacons=default(false);
@@ -45,5 +46,6 @@ import org.car2x.veins.modules.application.ieee80211p.BaseWaveApplLayer;
        // output lowerLayerOut; // to network layer
         //input lowerControlIn; // control from network layer
         //output lowerControlOut; // control to network layer
+
          
  }

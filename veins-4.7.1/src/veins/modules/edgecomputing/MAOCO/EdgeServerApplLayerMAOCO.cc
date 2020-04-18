@@ -26,7 +26,10 @@ void EdgeServerApplLayerMAOCO::onWSM(WaveShortMessage* wsm) {
                 if(!dynamic_cast<WSMwithSignal*>(wsm)->getIsMigration()){
                     //Edge Execution
                     // if (queue < 5 && tsk->getPurchexe()==1) {
+                    tsk->setStartComputationTime(getSimulation()->getSimTime().dbl());
                     send(tsk->dup(),"cpu$o");
+                    //testVector1.record(1.0);
+                    //cancelAndDelete(tsk);
                     // benefits+=(tsk->getQjE()*tsk->getRiE());
                     //  beneHis.record(benefits);
                     //  sendDelayed(tsk->dup(),0.1, "cloud$o");
@@ -38,10 +41,14 @@ void EdgeServerApplLayerMAOCO::onWSM(WaveShortMessage* wsm) {
 
                 //Migration
                 sendDelayed(tsk->dup(),0.1,"cloud$o");
+                //testVector2.record(1.0);
+                //cancelAndDelete(tsk);
                 //sendDelayed(tsk->dup(),0.1, "cloud$o");
             }}else{
                 tsk->setIsCloudExecution(1);
                 sendDelayed(tsk->dup(),0.1,"cloud$o");
+                testVector3.record(1.0);
+                //cancelAndDelete(tsk);
                 //To cloud
                 //sendDelayed(wsm->dup(),0.1, "cloud$o");
             }
@@ -123,7 +130,7 @@ void EdgeServerApplLayerMAOCO::initialize(int stage) {
          //this function doesnt work in RSU
 
 
-        dso=new Nature(px,py,tau);
+        nature=new Nature(px,py,tau);
 
         getParentModule()->subscribe("uj", this);
         getParentModule()->subscribe("test", this);
@@ -142,6 +149,13 @@ void EdgeServerApplLayerMAOCO::initialize(int stage) {
 //        beneHis.record(0);
 
         getParentModule()->subscribe(POST_MODEL_CHANGE, this);
+
+        /************MAOCO*******************************/
+        testVector1.setName("test vector 1");
+        testVector2.setName("test vector 2");
+        testVector3.setName("test vector 3");
+       //migrationCost=par("migrationCost");
+       // testVector1.record(1.0);
 
     }
 
@@ -169,6 +183,10 @@ void  EdgeServerApplLayerMAOCO::receiveSignal(cComponent *source, simsignal_t si
 
 void EdgeServerApplLayerMAOCO::handleTaskAck(cMessage* msg) {
     TaskRequest* tsk = dynamic_cast<TaskRequest*>(msg);
+    double cost=(getSimulation()->getSimTime().dbl()-tsk->getStartComputationTime())*tsk->getComputationprice()*tsk->getComputationamout()*10;
+    //double cost=tsk->getComputationprice()*tsk->getComputationamout()*10;
+    testVector1.record(cost);
+    tsk->setTotalCost(tsk->getTotalCost()+cost);
     //tsk->setRiE(dso->calUnitRate(tsk->getGeneRate(),tsk->getTTh(),tsk->getGeneRate(),tsk->getBeta(),tsk->getGama()));
     WaveShortMessage* wsm = new WaveShortMessage();
     populateWSM(wsm);
@@ -202,10 +220,10 @@ void EdgeServerApplLayerMAOCO::handleSelfMsg(cMessage* msg) {
 
         wsm->setPsid(BROADCASTINFO);
         wsm->setRiC(pricecloud);
-        wsm->setRiE(dso->getPrice(uj/1000));
+        wsm->setRiE(nature->getPrice(uj/1000));
         //wsm->setChannelNumber(channelUsed);
 
-        senps.record(dso->getPrice(uj/1000));
+        senps.record(nature->getPrice(uj/1000));
         ujss.record(uj/1000);
 //        maxp=dso->calUnitRate(geneRate, 0.1/2, 1000.0/110,betaj , gamaj, uj/numr,1.0);
 //        minp=dso->calUnitRate(geneRate, 0.1/2, 1000.0/110,betaj , gamaj, uj/numr,0.0);
@@ -219,7 +237,7 @@ void EdgeServerApplLayerMAOCO::handleSelfMsg(cMessage* msg) {
         cancelAndDelete(msg);
         InfoToCloud* info=new InfoToCloud();
         info->setSenderID(myId);
-        sendDelayed(info,0.1,"cloud$o");
+        send(info,"cloud$o");
 
 
     }
@@ -249,6 +267,7 @@ void EdgeServerApplLayerMAOCO::handleMessage(cMessage* msg) {
         handleTaskAck(msg);
         else if(dynamic_cast<TaskRequest*>(msg)->getCloudToEdgeExe()==1){
             TaskRequest* tsk=dynamic_cast<TaskRequest*>(msg);
+            tsk->setStartComputationTime(getSimulation()->getSimTime().dbl());
             send(tsk->dup(),"cpu$o");
         }
     } else if (msg->getArrivalGateId() == -1) {

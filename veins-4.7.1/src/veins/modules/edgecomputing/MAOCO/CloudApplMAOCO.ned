@@ -27,6 +27,7 @@ simple CloudApplMAOCO{
         double betaj=default(0.5);
         double gamaj=default(50.0);
         double geneRate=default(10);
+        double migrationCost=default(75);
     
     gates:
         inout cpu;

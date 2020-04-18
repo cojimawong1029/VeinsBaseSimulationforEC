@@ -22,6 +22,7 @@ public:
 
     double getUtilityPre(double qi, double data, double datarate,double pi,double getlink);
     double getEW(double qi);
+    double getEWwithK(double qi,double K);
     double getED(double qi,double data, double datarate,double getlink);
 
     double getUtilityPost(double qi,double pi,double texe);

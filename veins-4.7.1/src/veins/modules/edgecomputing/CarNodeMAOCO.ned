@@ -29,7 +29,7 @@ import org.car2x.veins.modules.edgecomputing.*;
 module CarNodeMAOCO
 {
     parameters:
-        
+
         string nicType = default("Nic80211p"); // type of network interface card
         string veinsmobilityType = default("org.car2x.veins.modules.mobility.traci.TraCIMobility"); //type of the mobility module
         string cpuType = default("ComputerOnBoard");
@@ -50,11 +50,11 @@ module CarNodeMAOCO
 
         veinsmobility: <veinsmobilityType> like org.car2x.veins.base.modules.IMobility {
             parameters:
-                @display("p=76,294;i=block/cogwheel");
+                @display("p=176,155;i=block/cogwheel");
         }
 
         cpu: <cpuType> like org.car2x.veins.modules.edgecomputing.IComputeResource {
-            @display("p=313,49");
+            @display("p=176,49");
         }
 
     connections:

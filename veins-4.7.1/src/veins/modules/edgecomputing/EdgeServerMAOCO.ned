@@ -41,22 +41,22 @@ module EdgeServerMAOCO
     submodules:
         appl: EdgeServerApplLayerMAOCO {
             parameters:
-                @display("p=60,90");
+                @display("p=99,46");
         }
 
         nic: <nicType> like org.car2x.veins.modules.nic.INic80211p {
             parameters:
-                @display("p=60,206");
+                @display("p=99,255");
         }
 
         mobility: BaseMobility {
             parameters:
-                @display("p=69,312;i=block/cogwheel");
+                @display("p=30,156;i=block/cogwheel");
         }
 
 
         cpu: <cpuType> like org.car2x.veins.modules.edgecomputing.IComputeResource {
-            @display("p=191,89");
+            @display("p=214,45");
         }
 
 
@@ -64,12 +64,17 @@ module EdgeServerMAOCO
 
 
         txQueue: TxQueue {
-            @display("p=160,244");
+            @display("p=21,46");
+        }
+        addDelay: AddDelay {
+            @display("p=148,150");
         }
     connections:
         appl.cpu <--> cpu.applLayer;
-        nic.upperLayerOut --> appl.lowerLayerIn;
-        nic.upperLayerIn <-- appl.lowerLayerOut;
+        nic.upperLayerOut --> addDelay.downIn;
+        addDelay.upOut --> appl.lowerLayerIn;
+        nic.upperLayerIn <-- addDelay.downOut;
+        addDelay.upIn <-- appl.lowerLayerOut;
         nic.upperControlOut --> appl.lowerControlIn;
         nic.upperControlIn <-- appl.lowerControlOut;
         veinsradioIn --> nic.radioIn;

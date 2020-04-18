@@ -14,6 +14,8 @@
 #include "veins/base/utils/Coord.h"
 #include "veins/modules/edgecomputing/MAOCO/WSMwithSignal_m.h"
 #include "veins/modules/edgecomputing/Informations/PsidList.h"
+#include <veins/modules/edgecomputing/MAOCO/MAOCOdecider.h>
+#include <veins/modules/edgecomputing/MAOCO/MAOCOdecider.h>
 
 #include <map>
 
@@ -47,7 +49,7 @@ class CarApplMAOCO : public BaseWaveApplLayer {
         cMessage* startTaskMsg;
         cMessage* stopTaskMsg;
         cMessage* checkCon;
-        Player* dss;
+
 
 
         simtime_t lastDroveAt;
@@ -59,7 +61,7 @@ class CarApplMAOCO : public BaseWaveApplLayer {
         int receiveTasksCount{0};
         int offLoadTasksCount{0};
         bool issend;
-        simtime_t applstart;
+//        simtime_t applstart;
         simtime_t applend;
         simtime_t appldelay;
         simtime_t lastCheck;
@@ -81,7 +83,7 @@ class CarApplMAOCO : public BaseWaveApplLayer {
         cOutVector cc;
 
 
-        std::map<int,simtime_t> applstarts;
+//        std::map<int,simtime_t> applstarts;
 // GAME related
         double rsudelay;
         double alaphaj;
@@ -106,16 +108,36 @@ class CarApplMAOCO : public BaseWaveApplLayer {
         cOutVector RSUxs;
         cOutVector RSUys;
         int chosenRSUID;
+        int currentRSUID=0;
         cOutVector chosenRSUIDs;
 
         std::map<int,Coord> RSUlocations;
+        std::map<int,double> RSUprices;
         int connectedRSUID;
+        int chosenRSUway;
 
-        virtual int choseOffloadRSU(std::map<int,Coord> RSUlocations);
+
+        virtual int choseOffloadRSU(TaskRequest* tsk);
+        virtual int choseOffloadRSUbyLyapunov(TaskRequest* tsk);
+        virtual int choseOffloadRSUbyPassive(TaskRequest* tsk);
+
+        std::map<int,Player*> players;
+        Player* dss;
+
+        cOutVector TaskCosts;
+        cOutVector chosenK;
+
+
+        MAOCOdecider* decider;
+
+
+
 
 
 
         virtual bool isRSUinRange(double x1,double y1,double x2,double y2,double Dmax);
+        virtual double getDistance(double x1,double y1,double x2,double y2);
+
 
 
 
@@ -123,6 +145,9 @@ class CarApplMAOCO : public BaseWaveApplLayer {
         cOutVector testVector1;
         cOutVector testVector2;
         cOutVector testVector3;
+        cOutVector testVector4;
+        cOutVector testVector5;
+
 
 
 /********************************************************/

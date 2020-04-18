@@ -40,8 +40,8 @@ void NicEntryDebug::connectTo(NicEntry* other) {
 	cGate *localoutgate = requestOutGate();
 
 	cDatarateChannel *datarateChannel = cDatarateChannel::create("channel");
-//	datarateChannel->setDelay(0.001);
-//	datarateChannel->setDatarate(15e7);
+	//datarateChannel->setDelay(0.1);
+	//datarateChannel->setDatarate(1e8);
 
 	localoutgate->connectTo(otherNic->requestInGate(),datarateChannel);
 

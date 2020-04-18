@@ -9,6 +9,10 @@
 #include "veins/modules/edgecomputing/EdgeMessage/TaskRequest_m.h"
 #include <random>
 #include <math.h>
+//#include "gurobi_c++.h"
+//#include <ilcplex/ilocplex.h>
+
+
 
 Define_Module(CarApplMAOCO);
 
@@ -16,19 +20,163 @@ CarApplMAOCO::~CarApplMAOCO() {
     cancelAndDelete(startTaskMsg);
     cancelAndDelete(stopTaskMsg);
     cancelAndDelete(checkCon);
-    delete dss;
+    //delete dss;
+
+    for(auto it=players.begin();it!=players.end();){
+        delete it->second;
+        it=players.erase(it);
+    }
 
 }
 
 
-int CarApplMAOCO::choseOffloadRSU(std::map<int,Coord> RSUlocations){//MAOCO-related
+int CarApplMAOCO::choseOffloadRSU(TaskRequest* tsk){//MAOCO-related
     double high=RSUlocations.size();
     double randomchosen=uniform(0.0,high);
     int numofchosen=ceil(randomchosen);
-//    testVector3.record(numofchosen);
+
     auto it=RSUlocations.begin();
     for(int i=1;i<numofchosen;i++,it++);//More judge, empty circle
-    return it->first;
+    int RSUID=it->first;
+
+    dss=players[RSUID];
+    tsk->setQjE(dss->iterQ());
+    tsk->setRiE(RiE);
+    tsk->setPurchexe(1);
+    dss->addPreDecision(tsk->getQjE(),dss->getUtilityPre(tsk->getQjE(),5000/1024.0, 27/8.0,RiE,0.02));
+    tsk->setComputationprice(tsk->getQjE());
+    tsk->setComputationamout(RiE);
+    tsk->setComputationGain(1);
+
+    return RSUID;
+
+}
+
+
+int CarApplMAOCO::choseOffloadRSUbyPassive(TaskRequest* tsk){//MAOCO-related
+
+    auto it=RSUlocations.begin();
+    int RSUID=it->first;
+
+    dss=players[RSUID];
+    tsk->setQjE(dss->iterQ());
+    tsk->setRiE(RiE);
+    tsk->setPurchexe(1);
+    dss->addPreDecision(tsk->getQjE(),dss->getUtilityPre(tsk->getQjE(),5000/1024.0, 27/8.0,RiE,0.02));
+
+    tsk->setComputationprice(tsk->getQjE());
+    tsk->setComputationamout(RiE);
+    tsk->setComputationGain(1);
+
+    return RSUID;
+
+}
+
+
+int CarApplMAOCO::choseOffloadRSUbyLyapunov(TaskRequest* tsk){
+    double maxUti=0;
+    int maxUtiRSU;
+    std::vector<double> addQy;
+    int id;
+    double bestK;
+    for(auto it=players.begin();it!=players.end();it++){
+        dss=it->second;
+        id=it->first;
+        if(id==currentRSUID){
+
+            double qi=dss->iterQ();
+
+            double delay=dss->getED(qi,5000/1024.0,27/8.0,0.02);
+            double priceRate=RSUprices[id]/dss->getMu();
+
+
+            //double K=decider->findBestKbyItera(delay,priceRate);
+            double K=decider->findBestKbyIterawithPlayer(qi,RSUprices[id]*qi,dss);
+
+
+
+            delay=dss->getEWwithK(dss->iterQ(),K);
+            delay+=delay+5000/1024/(27/8)+0.02;
+            double cost=qi*RSUprices[id];
+            double P=decider->getP(delay,cost,K);
+            std::vector<double> temy;
+
+            for (auto itt=RSUlocations.begin();itt!=RSUlocations.end();itt++){
+                if(itt->first==it->first){
+                    temy.push_back(getDistance(xposition,yposition,(itt->second).x,(itt->second).y)-240);
+                }else{
+                    temy.push_back(0);
+                }
+            double tem=decider->getLyapnovValue(P,temy);
+            if(tem>maxUti||maxUtiRSU==0){
+                maxUti=tem;
+                maxUtiRSU=it->first;
+                addQy=temy;
+            }
+            }
+
+
+            bestK=K;
+
+        }else{
+            double qi=dss->iterQ();
+
+            double delay=dss->getED(qi,5000/1024.0,27/8,0.02)+0.1;
+            double priceRate=RSUprices[id]/dss->getMu()+0.1;
+
+
+
+
+            //double K=decider->findBestKbyItera(delay,priceRate);
+            double K=decider->findBestKbyIterawithPlayer(qi,RSUprices[id]*qi,dss);
+
+
+
+
+            delay=dss->getEWwithK(dss->iterQ(),K);
+            delay+=delay+5000/1024/(27/8)+0.02+0.2;
+            double cost=qi*RSUprices[id]+5;
+            double P=decider->getP(delay,cost,K);
+            std::vector<double> temy;
+
+            for (auto itt=RSUlocations.begin();itt!=RSUlocations.end();itt++){
+                if(itt->first==it->first){
+                    temy.push_back(getDistance(xposition,yposition,(itt->second).x,(itt->second).y)-240);
+                }else{
+                    temy.push_back(0);
+                }
+            double tem=decider->getLyapnovValue(P,temy);
+            if(tem>maxUti||maxUtiRSU==0){
+                maxUti=tem;
+                maxUtiRSU=it->first;
+                addQy=temy;
+
+
+                bestK=K;
+            }
+            }
+        }
+    }
+
+
+
+    dss=players[maxUtiRSU];
+    tsk->setQjE(dss->iterQ());
+    tsk->setRiE(RiE);
+    tsk->setPurchexe(1);
+
+
+    tsk->setMi(bestK*tsk->getMi());
+
+    dss->addPreDecision(tsk->getQjE(),dss->getUtilityPre(tsk->getQjE(),5000/1024.0, 27/8.0,RiE,0.02));
+    decider->updateQ(addQy);
+
+
+//    testVector3.record(decider->getQbyIndex(1));
+    tsk->setComputationprice(tsk->getQjE());
+    tsk->setComputationamout(RiE);
+    tsk->setComputationGain(bestK);
+    return maxUtiRSU;
 
 }
 
@@ -38,6 +186,13 @@ bool CarApplMAOCO::isRSUinRange(double x1,double y1,double x2,double y2,double D
     if(dis<Dmax)return true;
     else return false;
 }
+
+double CarApplMAOCO::getDistance(double x1,double y1,double x2,double y2){
+    double dis=pow(pow((x1-x2),2)+pow((y1-y2),2),0.5);
+    return dis;
+}
+
+
 
 
 
@@ -52,6 +207,9 @@ void CarApplMAOCO::handleSelfMsg(cMessage* msg) {
         generateTasksCount++;
 
 /*******************MAOCO ADD**********************************/
+
+
+/*****************Information Recording***********************/
         vehicleSpeeds.record(mobility->getSpeed());
         vehicleSpeed=mobility->getSpeed();
 
@@ -64,13 +222,32 @@ void CarApplMAOCO::handleSelfMsg(cMessage* msg) {
         for(auto it = RSUlocations.begin(); it != RSUlocations.end();){
         Coord posRSU=it->second;
         if(!isRSUinRange(posRSU.x,posRSU.y,xposition,yposition,240)){
+            for(auto itt=players.begin();itt!=players.end();){
+                if(itt->first==it->first){
+                    itt=players.erase(itt);
+                }else{
+                    itt++;
+                }
+            }
+            for(auto itt=RSUprices.begin();itt!=RSUprices.end();){
+                if(itt->first==it->first){
+                    itt=RSUprices.erase(itt);
+                }else{
+                    itt++;
+                }
+            }
+
+            int nn=1;
+            for(auto itt=RSUlocations.begin();itt->first==it->first;itt++,nn++);
+            decider->removeQ(nn);
+            //decider->removeQ(2*nn-1);
+            //testVector2.record(decider->getQsize());
+
             it=RSUlocations.erase(it);
+            //testVector3.record(RSUlocations.size());
         }else{
             it++;}
         }
-
-
-
 
 
 /*************************************************************/
@@ -86,52 +263,53 @@ void CarApplMAOCO::handleSelfMsg(cMessage* msg) {
         tsk->setAlapha(0.1);
         tsk->setBeta(1);
         tsk->setGama(0.001);
+        tsk->setGenerateTime(getSimulation()->getSimTime().dbl());
 
 
-//        dss->setWeight(alaphaj,betaj,gamaj);
-//        根据预测选择任务执行方式
-        if(RiE!=-1){
-            tsk->setQjE(dss->iterQ());
-            tsk->setRiE(RiE);
+/*********************MAOCO related***************************/
+        switch(chosenRSUway){
+        case SIMPLEWAY:
+            chosenRSUID=choseOffloadRSU(tsk);
+            break;
+        case LYAPUNOVWAY:
+            chosenRSUID=choseOffloadRSUbyLyapunov(tsk);
+            break;
+        case PASSIVEWAY:
+            chosenRSUID=choseOffloadRSUbyPassive(tsk);
+            break;
+        default:
+            chosenRSUID=choseOffloadRSU(tsk);
+            break;
+
         }
-        if(RiC!=-1){
-            tsk->setQjC(dss->iterQ());
-            tsk->setRiC(RiC);
-        }
-        tsk->setPurchexe(1);
-        tsk->setIsMigration(0);
-        dss->addPreDecision(tsk->getQjE(),dss->getUtilityPre(tsk->getQjE(),5000/1024.0, 27/8.0,RiE,0.02));
+        //chosenRSUID=choseOffloadRSUbyLyapunov(tsk);
+        //chosenRSUID=choseOffloadRSU(RSUlocations);
 
 
-//        double i=dss->getUtility(tsk->getGeneRate(), 1000/tsk->getMi(),RiE,0.002,500,50);
-//        double j=dss->getUtility(tsk->getGeneRate(), 1000/tsk->getMi(),RiC,0.1,500,45);
-//        double k=dss->getsUtility(tsk->getGeneRate(), 1000/tsk->getMi(),0,0,0,45);
+/********************choose Target Server********************/
 
-//        if(i>j&&i>k)
-//            tsk->setPurchexe(1);
-//        else if(j>i&&j>i){
-//            tsk->setPurchexe(2);
-//        }else{
-//            tsk->setPurchexe(0);
-//        }
-        //tsk->setByteLength(1e2);
 
-        applstart = getSimulation()->getSimTime();
-        applstarts.insert(
-                std::pair<int, simtime_t>(tsk->getTasksendid(), applstart));
+
 
         TaskCount--;
         //issend = true;
-        if (rsudelay > 0.5||tsk->getPurchexe()==0) {
+//        testVector4.record(rsudelay);
+        if (rsudelay > 1) {
             //send(tsk, "taskManager$o");//将计算任务放到本地执行
-            cancelAndDelete(tsk);
+            //cancelAndDelete(tsk);
         } else {
             //cancelAndDelete(tsk);
 
-            chosenRSUID=choseOffloadRSU(RSUlocations);
+
             chosenRSUIDs.record(chosenRSUID);
-            offLoad(tsk,RSUlocations.begin()->first,1,0,chosenRSUID);
+            if(chosenRSUID==currentRSUID){
+            offLoad(tsk,currentRSUID,0,0,chosenRSUID);}
+            else{
+                offLoad(tsk,currentRSUID,1,0,chosenRSUID);
+            }
+            currentRSUID=chosenRSUID;
 //            send(tsk, "taskManager$o");
+//            testVector3.record(currentRSUID);
         }
 
 
@@ -190,6 +368,15 @@ void CarApplMAOCO::initialize(int stage) {
         recePr.setName("received price");
 /**********************MAOCO************************************/
         //MAOCO related
+        decider=new MAOCOdecider();
+        double VinLya=par("VinLya");
+        decider->setV(VinLya);
+        double alphainLya=par("alphainLya");
+        double betainLya=par("betainLya");
+        double gammainLya=par("gammainLya");
+        chosenRSUway=par("chosenRSUway");
+        decider->setWeight(alphainLya,betainLya,gammainLya);
+
         vehicleSpeeds.setName("vehicle speeds");
         xPositions.setName("vehicle position x");
         yPositions.setName("vehicle position y");
@@ -200,6 +387,11 @@ void CarApplMAOCO::initialize(int stage) {
         testVector1.setName("test vector 1");
         testVector2.setName("test vector 2");
         testVector3.setName("test vector 3");
+        testVector4.setName("test vector 4");
+        testVector5.setName("test vector 5");
+        TaskCosts.setName("task costs");
+        chosenK.setName("chosen K");
+
 
 
 
@@ -224,7 +416,7 @@ void CarApplMAOCO::initialize(int stage) {
         scheduleAt(simTime(), checkCon);
         lastCheck = getSimulation()->getSimTime();
 
-        dss=new Player(alaphaj,betaj,gamaj,geneRate,handleRate,tth,learnningRate);
+        //dss=new Player(alaphaj,betaj,gamaj,geneRate,handleRate,tth,learnningRate);
         WATCH(RiE);
         WATCH(RiC);
 
@@ -277,6 +469,7 @@ void CarApplMAOCO::finish() {
 
 
     recordScalar("TaskCompeleteRate", (receiveTasksCount*1.0/generateTasksCount*1.0)*100.0);
+    recordScalar("chosen RSU way", chosenRSUway);
     emit(taskCompeleteRate, (receiveTasksCount*1.0/generateTasksCount*1.0)*100.0);
 
 }
@@ -290,28 +483,17 @@ void CarApplMAOCO::onWSM(WaveShortMessage* wsm) {
                 "taskRequest"));
         ASSERT(tsk);
         if (tsk->getTaskownerid() == getId()) {
-            //issend = true;
             applend = getSimulation()->getSimTime();
-            appldelay = applend - applstarts[tsk->getTasksendid()];
-            applstarts.erase(tsk->getTasksendid());
+            appldelay = applend - tsk->getGenerateTime();
             delays.record(appldelay.dbl());
             emit(applDelaysSignal, appldelay.dbl());
-            //dss->addPreDecision(tsk->getQjE(),dss->getUtilityPost(tsk->getQjE(),tsk->getRiE(),appldelay.dbl()));
-            utilities.record(dss->getUtilityPost(tsk->getQjE(),tsk->getRiE(),appldelay.dbl()));
-//            if(tsk->getPurchexe()==1)
-//            utilities.record(dss->getPostUtility(10,tsk->getMi()/1000,tsk->getRiE(),appldelay.dbl(),tsk->getQjE()));
-//            else
-//                utilities.record(dss->getPostUtility(10,tsk->getMi()/1000,tsk->getRiC(),appldelay.dbl(),tsk->getQjC()));
+            TaskCosts.record(tsk->getTotalCost());
+            chosenK.record(tsk->getComputationGain());
 
+            //utilities.record(dss->getUtilityPost(tsk->getQjE(),tsk->getRiE(),appldelay.dbl()));
+            utilities.record(decider->getP(appldelay.dbl(),tsk->getTotalCost(),tsk->getComputationGain()));
             receiveTasksCount++;
             offLoadTasksCount++;
-
-//            if(tsk->getExe()==1){
-//                   RiE=tsk->getRiE();
-//               }else if(tsk->getExe()==2){
-//                   RiC=tsk->getRiC();
-//                   RiE=tsk->getRiE();
-//               }
         }
 
     } else if (wsm->getPsid() == BROADCASTINFO) {
@@ -330,23 +512,32 @@ void CarApplMAOCO::onWSM(WaveShortMessage* wsm) {
 
         auto pos=RSUlocations.find(connectedRSUID);
         if(pos==RSUlocations.end()? 1:0){
+
             RSUlocations.insert(std::pair<int,Coord>(connectedRSUID,RSUposition));
+            decider->addQ();
         }
 
+        auto pla=players.find(connectedRSUID);
+        if(pla==players.end()? 1:0){
+            players.insert(std::pair<int,Player*>(connectedRSUID,new Player(alaphaj,betaj,gamaj,geneRate,handleRate,tth,learnningRate)));
+        }
 
-        //for Test and Debug
-//        testVector1.record(RSUlocations.size());
-//        testVector2.record(connectedRSUID);
+        auto pri=RSUprices.find(connectedRSUID);
+        if(pri==RSUprices.end()? 1:0){
+            RSUprices.insert(std::pair<int,double>(connectedRSUID,wsm->getRiE()));
+        }
+
+        if(RSUlocations.size()==1){
+            currentRSUID=connectedRSUID;
+        }
 
 
 
 /***********************************************************/
 
-
-
-
         rsudelay = getSimulation()->getSimTime().dbl()
                 - wsm->getCreationTime().dbl();
+        lastCheck= getSimulation()->getSimTime().dbl();
         //bubble("!!!!!!");
 
         rsuDelays.record(rsudelay);
@@ -366,6 +557,8 @@ void CarApplMAOCO::offLoad(TaskRequest* tsk,int ConnectedRSUID,bool isMigration,
     puis.record(tsk->getQjE());
     populateWSM(wsm);
     wsm->setWsmData(mobility->getRoadId().c_str());
+    //wsm->setWsmLength(5000000);
+    //wsm->setDataRate(500000);
     wsm->addObject(tsk);
     wsm->setPsid(PSIDTSK);
 
@@ -377,16 +570,8 @@ void CarApplMAOCO::offLoad(TaskRequest* tsk,int ConnectedRSUID,bool isMigration,
 
 /********************************************************************/
 
-
-
-
     wsm->setBitLength(5000 + normal(0.0, 100.0));
     ByteLengths.record(wsm->getByteLength());
-
-
-
-
-
     sendDown(wsm);
 }
 
@@ -395,8 +580,12 @@ void CarApplMAOCO::handleTaskAck(cMessage* msg) {
 //    RiC=tsk->getRiC();
 //    RiE=tsk->getRiE();
     applend = getSimulation()->getSimTime();
-    appldelay = applend - applstarts[tsk->getTasksendid()];
-    applstarts.erase(tsk->getTasksendid());
+//    testVector1.record(0.0);
+//    testVector1.record(tsk->getGenerateTime());
+    //appldelay=applend-tsk->getGenerateTime();
+    //testVector1.record(appldelay.dbl());
+    appldelay = applend-tsk->getGenerateTime();
+    //applstarts.erase(tsk->getTasksendid());
     delays.record(appldelay.dbl());
     emit(applDelaysSignal, appldelay.dbl());
     receiveTasksCount++;

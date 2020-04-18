@@ -61,14 +61,31 @@ packet TaskRequest {
     bool direct=false;
     
     int exe=0;
-    
     int purchexe=0;
     
-    //MAOCO-related
+    
+//MAOCO-related
+//
+//
+//
+//
+//
+//Add in 2020
+
+
     bool isMigration=0;
 	int TargetMigrationID;
 	bool isCloudExecution=0;
     bool CloudToEdgeExe=0;
+    double cbamout;
+    
+    double totalCost=0;
+    double generateTime;
+    double computationprice;
+    double computationamout;
+    double startComputationTime;
+    double ComputationGain;
+   
     
     
     

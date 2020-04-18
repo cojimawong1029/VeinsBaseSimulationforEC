@@ -40,7 +40,9 @@ module CloudServer
             gates:
                 connect[sizeof(connectsIn)];
         }
-        queue[sizeof(connectsIn)]: TxQueue;
+        queue[sizeof(connectsIn)]: TxQueue {
+            @display("p=81,95");
+        }
     connections allowunconnected:
         //cpu.memory <--> memory.cpu;
         cloudappl.cpu <--> cpu.applLayer;

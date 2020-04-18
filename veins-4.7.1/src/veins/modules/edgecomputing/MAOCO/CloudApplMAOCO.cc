@@ -19,13 +19,13 @@ CloudApplMAOCO::CloudApplMAOCO() {
 
 CloudApplMAOCO::~CloudApplMAOCO() {
     cancelAndDelete(endTxEvent);
-    delete dso;
+//    delete dso;
 }
 
 void CloudApplMAOCO::initialize() {
     cpu = findGate("cpu$i");
     endTxEvent = new cMessage("endTx");
-    dso=new DSO();
+//    dso=new DSO();
     getSimulation()->getSystemModule()->subscribe("occucloud", this);
     getSimulation()->getSystemModule()->subscribe("test", this);
     getParentModule()->subscribe("queueLength", this);
@@ -61,18 +61,19 @@ void CloudApplMAOCO::initialize() {
 
 /********************MAOCO ADD***********************/
      testVector1.setName("Test Vector 1");
+     migrationCost=par("migrationCost");
 
 }
 
 void CloudApplMAOCO::handleSelfMsg(cMessage* msg) {
 
-    emit(price,dso->calUnitRate(geneRate, 0.1/2, 1000.0/110,betaj , gamaj, ujc));
-    maxp=dso->calUnitRate(geneRate, 0.1/2, 1000.0/110,betaj , gamaj, ujc,1.0);
-    minp=dso->calUnitRate(geneRate, 0.1/2, 1000.0/110,betaj , gamaj, ujc,0.0);
-    maxps.record(maxp);
-    minps.record(minp);
-    senps.record(dso->calUnitRate(geneRate, 0.1/2, 1000.0/110,betaj , gamaj, ujc));
-    scheduleAt(simTime() + sendprice, sendp);
+//      emit(price,49);
+//    maxp=dso->calUnitRate(geneRate, 0.1/2, 1000.0/110,betaj , gamaj, ujc,1.0);
+//    minp=dso->calUnitRate(geneRate, 0.1/2, 1000.0/110,betaj , gamaj, ujc,0.0);
+//    maxps.record(maxp);
+//    minps.record(minp);
+//    senps.record(dso->calUnitRate(geneRate, 0.1/2, 1000.0/110,betaj , gamaj, ujc));
+      scheduleAt(simTime() + sendprice, sendp);
 
 
 
@@ -95,6 +96,8 @@ void  CloudApplMAOCO::receiveSignal(cComponent *source, simsignal_t signalID, do
 void CloudApplMAOCO::handleTaskAck(cMessage* msg) {
     TaskRequest* tsk = dynamic_cast<TaskRequest*>(msg);
     ASSERT(tsk);
+    double cost=(getSimulation()->getSimTime().dbl()-tsk->getStartComputationTime())*tsk->getComputationprice()*tsk->getComputationamout();
+    tsk->setTotalCost(tsk->getTotalCost()+cost);
     int i=gate(tsk->getCloudGate())->getIndex();
     i=gate("connect$o",i)->getId();
    //tsk->setRiC(dso->calUnitRate(tsk->getGeneRate(),tsk->getTTh(),tsk->getGeneRate(),tsk->getBeta(),tsk->getGama()));
@@ -125,6 +128,7 @@ void CloudApplMAOCO::handleMessage(cMessage *msg) {
             int SendGateIndex=RSUtoGates[TaskrsuID];
             tsk->setCloudToEdgeExe(1);
             MigrationTimes++;
+            tsk->setTotalCost(tsk->getTotalCost()+migrationCost);
             send(tsk,gate("connect$o",SendGateIndex)->getId());
 
             //Migration to Edge Servers
@@ -142,6 +146,7 @@ void CloudApplMAOCO::handleMessage(cMessage *msg) {
 }
 
 void CloudApplMAOCO::handleTaskRequest(TaskRequest* tsk){
+    tsk->setStartComputationTime(getSimulation()->getSimTime().dbl());
     send(tsk, "cpu$o");
 }
 

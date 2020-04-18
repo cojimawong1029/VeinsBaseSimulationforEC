@@ -29,7 +29,7 @@ module CloudServerMAOCO
 
     submodules:
         cpu: <cpuType> like org.car2x.veins.modules.edgecomputing.IComputeResource {
-            @display("p=235,94");
+            @display("p=241,94");
         }
 
         //        memory: <memoryType> like IMemory {
@@ -42,7 +42,9 @@ module CloudServerMAOCO
             gates:
                 connect[sizeof(connectsIn)];
         }
-        queue[sizeof(connectsIn)]: TxQueue;
+        queue[sizeof(connectsIn)]: TxQueue {
+            @display("p=80,95");
+        }
     connections allowunconnected:
         //cpu.memory <--> memory.cpu;
         cloudappl.cpu <--> cpu.applLayer;

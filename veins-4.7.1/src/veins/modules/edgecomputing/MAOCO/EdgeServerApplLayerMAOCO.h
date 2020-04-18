@@ -68,7 +68,7 @@ class EdgeServerApplLayerMAOCO : public BaseWaveApplLayer {
     cOutVector ujss;
 
     double gateind{0};
-/*******************************************************************/
+/********************MAOCO related*********************************/
     //MAOCO related
 
     double xposition,yposition;
@@ -77,16 +77,22 @@ class EdgeServerApplLayerMAOCO : public BaseWaveApplLayer {
     int channelUsed;
     double pingStart;
     cMessage* sendInfotoCloud;
+    //double migrationCost;
 
 /******************************************************************/
+/********************For testing**********************************/
+    cOutVector testVector1;
+    cOutVector testVector2;
+    cOutVector testVector3;
 
 
-    Nature* dso;
+    Nature* nature;
     //cOutVector ujs;
 
 	public:
 
     virtual void finish();
+
 
     virtual void receiveSignal(cComponent *source, simsignal_t signalID, long l, cObject *details){
         std::string name=getSignalName(signalID);

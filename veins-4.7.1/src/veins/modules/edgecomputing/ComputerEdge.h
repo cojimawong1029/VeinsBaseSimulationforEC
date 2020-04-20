@@ -89,6 +89,10 @@ class ComputerEdge : public cSimpleModule
     cOutVector ram4;
 
 
+/****************************************************************/
+    double fb;
+
+
 
 
 

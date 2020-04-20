@@ -26,6 +26,7 @@ simple ComputerEdge like IComputeResource
         double ram = default(50000);
         int numofHost = default(2);
         double timeIndex = default(0.5);
+        double fb=default(1000);
 
 
         @signal[queueLength](type="long");

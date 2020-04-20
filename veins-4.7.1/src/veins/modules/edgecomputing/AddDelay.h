@@ -10,6 +10,8 @@
 
 #include <omnetpp.h>
 using namespace omnetpp;
+#include "veins/modules/messages/WaveShortMessage_m.h"
+#include "veins/modules/edgecomputing/MAOCO/WSMwithSignal_m.h"
 
 class AddDelay : public cSimpleModule
 {
@@ -19,6 +21,8 @@ class AddDelay : public cSimpleModule
     int downIn;
     int upOut;
     int downOut;
+    double dataTransRate;
+    double rateLossRate;
 
 
   public:
@@ -27,6 +31,7 @@ class AddDelay : public cSimpleModule
   protected:
     virtual void initialize() override;
     virtual void handleMessage(cMessage *msg) override;
+
 
 
 };

@@ -54,6 +54,7 @@ void ComputerEdge::initialize() {
     Eidle = par("Eidle");
     Ebusy = par("Ebusy");
     timeIndex = par("timeIndex");
+    fb=par("fb");
 
     encosum = 0;
     lastVmId = 0;
@@ -153,7 +154,7 @@ double ComputerEdge::getMaxRest(double besto){
     double max=0;
     double tem;
     for(int i=0;i<numofHost;i++){
-        tem=PMs[i]->getCPUR(besto)/1000;
+        tem=PMs[i]->getCPUR(besto)/fb;
         if(tem>max)
         max=tem;
     }
@@ -213,7 +214,7 @@ void ComputerEdge::chooseFromQueue(int removeId) {
             queueLength = queueVMs.size();
             emit(queueLengthSignal, queueLength);
 
-            scheduleAt(simTime() + tsk->getMi()/(tsk->getQjE()*1000), tsk);
+            scheduleAt(simTime() + tsk->getMi()/(tsk->getQjE()*fb), tsk);
             chooseFromQueue(removeId);
         }
 
@@ -253,7 +254,7 @@ void ComputerEdge::handleTaskRequest(TaskRequest *tsk) {
 
     if (std::find(modules.begin(), modules.end(), tsk->getTaskmodule())
             != modules.end()) { //check whether the server can hold the task?
-        VM* vm = new VM(1000*tsk->getQjE() , tsk->getDyme(), tsk->getTaskmodule(),
+        VM* vm = new VM(fb*tsk->getQjE() , tsk->getDyme(), tsk->getTaskmodule(),
                 -1);
         vm->setVMownerId(tsk->getTaskownerid());
         if (checkIsRegister(tsk->getTaskownerid())) {
@@ -264,7 +265,7 @@ void ComputerEdge::handleTaskRequest(TaskRequest *tsk) {
         } else {
             if (vmAllocation->canCreateVM(vm, PMs)) {
                 tsk->setVmId(createVM(vm));
-                scheduleAt(simTime() + tsk->getMi()/(tsk->getQjE()*1000), tsk);
+                scheduleAt(simTime() + tsk->getMi()/(tsk->getQjE()*fb), tsk);
             } else {
                 queueTasks.push_back(tsk);
                 queueVMs.push_back(vm);

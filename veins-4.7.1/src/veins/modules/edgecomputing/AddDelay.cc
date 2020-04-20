@@ -16,13 +16,28 @@ void AddDelay::initialize(){
     downOut=findGate("downOut");
     upIn=findGate("upIn");
     downIn=findGate("downIn");
+    dataTransRate=par("dataTransRate");
+    rateLossRate=par("rateLossRate");
 }
 
 void AddDelay::handleMessage(cMessage* msg) {
     if(msg->getArrivalGateId() == upIn){
-        sendDelayed(msg,0.1,downOut);
+        if(WSMwithSignal* wsm=dynamic_cast<WSMwithSignal*>(msg)){
+            double dataRateAdapted=dataTransRate*pow(rateLossRate,wsm->getRelatedSpeed());
+            double tem=wsm->getBitLength()/1024/dataRateAdapted;
+            sendDelayed(wsm,tem,downOut);
+        }else{
+            sendDelayed(msg,0.001,downOut);
+        }
+
     }else if(msg->getArrivalGateId() == downIn){
-        sendDelayed(msg,0.1,upOut);
+        if(WSMwithSignal* wsm=dynamic_cast<WSMwithSignal*>(msg)){
+            double dataRateAdapted=dataTransRate*pow(rateLossRate,wsm->getRelatedSpeed());
+            double tem=wsm->getBitLength()/1024/dataRateAdapted;
+            sendDelayed(wsm,tem,upOut);
+        }else{
+            sendDelayed(msg,0.001,upOut);
+        }
     }
 
 }

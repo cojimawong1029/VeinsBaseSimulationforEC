@@ -58,6 +58,7 @@ public:
 
     virtual double findBestKbyItera(double delay,double costRate);
     virtual double findBestKbyIterawithPlayer(double qi,double cost,Player* dss);
+    virtual double findBestKbyIterawithPlayerMath(double qi,double costRate,Player* dss);
 
 
 

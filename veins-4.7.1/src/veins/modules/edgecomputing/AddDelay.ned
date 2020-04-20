@@ -20,6 +20,8 @@ simple AddDelay
     parameters:
         @class(AddDelay);
         @display("i=block/arrival");
+        double dataTransRate=default(27);
+        double rateLossRate=default(1.01);
 
     gates:
         input downIn;

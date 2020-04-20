@@ -59,9 +59,13 @@ void CloudApplMAOCO::initialize() {
      beneHis.record(0);
 
 
-/********************MAOCO ADD***********************/
+/********************MAOCO ADD***************************************/
      testVector1.setName("Test Vector 1");
      migrationCost=par("migrationCost");
+
+     delayToEdge=par("delayToEdge");
+
+/********************************************************************/
 
 }
 
@@ -102,7 +106,7 @@ void CloudApplMAOCO::handleTaskAck(cMessage* msg) {
     i=gate("connect$o",i)->getId();
    //tsk->setRiC(dso->calUnitRate(tsk->getGeneRate(),tsk->getTTh(),tsk->getGeneRate(),tsk->getBeta(),tsk->getGama()));
    //tsk->setExe(2);
-    send(tsk,i);
+    sendDelayed(tsk,delayToEdge,i);
 }
 
 
@@ -129,7 +133,7 @@ void CloudApplMAOCO::handleMessage(cMessage *msg) {
             tsk->setCloudToEdgeExe(1);
             MigrationTimes++;
             tsk->setTotalCost(tsk->getTotalCost()+migrationCost);
-            send(tsk,gate("connect$o",SendGateIndex)->getId());
+            sendDelayed(tsk,delayToEdge,gate("connect$o",SendGateIndex)->getId());
 
             //Migration to Edge Servers
         }

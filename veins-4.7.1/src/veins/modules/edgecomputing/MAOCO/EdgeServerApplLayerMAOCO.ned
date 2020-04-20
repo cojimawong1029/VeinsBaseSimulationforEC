@@ -33,6 +33,7 @@ import org.car2x.veins.modules.application.ieee80211p.BaseWaveApplLayer;
         double changerate=default(2);
         double changeindictor=default(1.1);
         int channelUsed=default(174);
+        double delayToCloud=default(0.1);
 
 	    
 	    //int headerLength @unit("bit");

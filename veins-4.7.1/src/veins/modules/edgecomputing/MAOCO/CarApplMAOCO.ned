@@ -45,7 +45,7 @@ simple CarApplMAOCO extends BaseWaveApplLayer
         double betaj=default(1);
         double gamaj=default(0.25);
         double geneRate=default(10);
-        double handleRate=default(10);
+        double handleRate=default(100);
         double tTh=default(0.1);
         double learnningRate=default(0.5);
         

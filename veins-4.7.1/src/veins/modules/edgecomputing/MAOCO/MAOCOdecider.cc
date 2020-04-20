@@ -101,4 +101,11 @@ double MAOCOdecider::findBestKbyIterawithPlayer(double qi,double cost,Player* ds
         return K2;
 }
 
+double MAOCOdecider::findBestKbyIterawithPlayerMath(double qi,double costRate,Player* dss){
+    double tem1=(-costRate+gamma);
+    double tem2=pow((qi*dss->getMu())/(-2*(tem1/-1/alpha-1/(2*qi*dss->getMu()))),0.5);
+    double tem3=(qi*dss->getMu()-tem2)/dss->getLambda();
+    return tem3;
+}
+
 

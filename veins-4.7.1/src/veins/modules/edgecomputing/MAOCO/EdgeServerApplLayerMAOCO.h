@@ -76,6 +76,7 @@ class EdgeServerApplLayerMAOCO : public BaseWaveApplLayer {
     BaseMobility* RSUmobility;
     int channelUsed;
     double pingStart;
+    double delayToCloud;
     cMessage* sendInfotoCloud;
     //double migrationCost;
 

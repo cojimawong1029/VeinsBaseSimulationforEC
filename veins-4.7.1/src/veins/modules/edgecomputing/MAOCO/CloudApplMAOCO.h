@@ -100,6 +100,7 @@ class CloudApplMAOCO : public cSimpleModule,  public cListener
     int MigrationTimes{0};
 
     double migrationCost;
+    double delayToEdge;
 
 
 /****************For Testing**************************/

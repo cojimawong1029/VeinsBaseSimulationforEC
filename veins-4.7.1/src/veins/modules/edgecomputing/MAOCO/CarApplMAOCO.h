@@ -117,7 +117,7 @@ class CarApplMAOCO : public BaseWaveApplLayer {
         int chosenRSUway;
 
 
-        virtual int choseOffloadRSU(TaskRequest* tsk);
+        virtual int choseOffloadRSU(TaskRequest* tsk, int currentRSUID);
         virtual int choseOffloadRSUbyLyapunov(TaskRequest* tsk);
         virtual int choseOffloadRSUbyPassive(TaskRequest* tsk);
 

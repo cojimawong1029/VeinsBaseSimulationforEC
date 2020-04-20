@@ -37,6 +37,7 @@ packet WSMwithSignal extends WaveShortMessage {
 	int ConnectedRSUID;
 	
 	bool isCloudExecution=0;
+	double relatedSpeed;
 	
 	
 	

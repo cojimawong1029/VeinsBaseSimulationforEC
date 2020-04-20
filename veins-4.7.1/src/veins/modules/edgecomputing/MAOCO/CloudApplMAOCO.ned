@@ -28,6 +28,7 @@ simple CloudApplMAOCO{
         double gamaj=default(50.0);
         double geneRate=default(10);
         double migrationCost=default(75);
+        double delayToEdge=default(0.1);
     
     gates:
         inout cpu;

@@ -38,6 +38,24 @@ network RSUExampleScenarioStraight extends Scenario
         rsu5: EdgeServerMAOCO {
             @display("p=999,50;is=l");
         }
+        
+        rsu6: EdgeServerMAOCO {
+            @display("p=125,50;is=l");
+        }
+        rsu7: EdgeServerMAOCO {
+            @display("p=375,50;is=l");
+        }
+        rsu8: EdgeServerMAOCO {
+            @display("p=625,50;is=l");
+        }
+        rsu9: EdgeServerMAOCO {
+            @display("p=875,50;is=l");
+        }
+
+
+
+
+
 
         cloud: CloudServerMAOCO {
             @display("p=1053,151;is=l");
@@ -58,10 +76,19 @@ network RSUExampleScenarioStraight extends Scenario
         rsu3.cloudserverOut --> {  delay = 100ms; datarate = 100Mbps;@display("ls=,00"); } --> cloud.connectsIn++;
         rsu4.cloudserverOut --> {  delay = 100ms; datarate = 100Mbps;@display("ls=,00"); } --> cloud.connectsIn++;
         rsu5.cloudserverOut --> {  delay = 100ms; datarate = 100Mbps;@display("ls=,00"); } --> cloud.connectsIn++;
+        rsu6.cloudserverOut --> {  delay = 100ms; datarate = 100Mbps;@display("ls=,00"); } --> cloud.connectsIn++;
+        rsu7.cloudserverOut --> {  delay = 100ms; datarate = 100Mbps;@display("ls=,00"); } --> cloud.connectsIn++;
+        rsu8.cloudserverOut --> {  delay = 100ms; datarate = 100Mbps;@display("ls=,00"); } --> cloud.connectsIn++;
+        rsu9.cloudserverOut --> {  delay = 100ms; datarate = 100Mbps;@display("ls=,00"); } --> cloud.connectsIn++;
+
 
         rsu1.cloudserverIn <-- {  delay = 100ms; datarate = 100Mbps;@display("ls=,00"); } <-- cloud.connectsOut++;
         rsu2.cloudserverIn <-- {  delay = 100ms; datarate = 100Mbps;@display("ls=,00"); } <-- cloud.connectsOut++;
         rsu3.cloudserverIn <-- {  delay = 100ms; datarate = 100Mbps;@display("ls=,00"); } <-- cloud.connectsOut++;
         rsu4.cloudserverIn <-- {  delay = 100ms; datarate = 100Mbps;@display("ls=,00"); } <-- cloud.connectsOut++;
         rsu5.cloudserverIn <-- {  delay = 100ms; datarate = 100Mbps;@display("ls=,00"); } <-- cloud.connectsOut++;
+        rsu6.cloudserverIn <-- {  delay = 100ms; datarate = 100Mbps;@display("ls=,00"); } <-- cloud.connectsOut++;
+        rsu7.cloudserverIn <-- {  delay = 100ms; datarate = 100Mbps;@display("ls=,00"); } <-- cloud.connectsOut++;
+        rsu8.cloudserverIn <-- {  delay = 100ms; datarate = 100Mbps;@display("ls=,00"); } <-- cloud.connectsOut++;
+        rsu9.cloudserverIn <-- {  delay = 100ms; datarate = 100Mbps;@display("ls=,00"); } <-- cloud.connectsOut++;        
 }

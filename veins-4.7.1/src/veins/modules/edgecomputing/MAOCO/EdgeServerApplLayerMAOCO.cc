@@ -28,6 +28,7 @@ void EdgeServerApplLayerMAOCO::onWSM(WaveShortMessage* wsm) {
                     // if (queue < 5 && tsk->getPurchexe()==1) {
                     tsk->setStartComputationTime(getSimulation()->getSimTime().dbl());
                     send(tsk->dup(),"cpu$o");
+
                     //testVector1.record(1.0);
                     //cancelAndDelete(tsk);
                     // benefits+=(tsk->getQjE()*tsk->getRiE());
@@ -40,14 +41,16 @@ void EdgeServerApplLayerMAOCO::onWSM(WaveShortMessage* wsm) {
                 tsk->setTargetMigrationID(dynamic_cast<WSMwithSignal*>(wsm)->getTargetMigrationID());
 
                 //Migration
-                sendDelayed(tsk->dup(),0.1,"cloud$o");
+                sendDelayed(tsk->dup(),delayToCloud,"cloud$o");
+                //cancelAndDelete(tsk);
                 //testVector2.record(1.0);
                 //cancelAndDelete(tsk);
                 //sendDelayed(tsk->dup(),0.1, "cloud$o");
             }}else{
                 tsk->setIsCloudExecution(1);
-                sendDelayed(tsk->dup(),0.1,"cloud$o");
-                testVector3.record(1.0);
+                sendDelayed(tsk->dup(),delayToCloud,"cloud$o");
+                //testVector3.record(1.0);
+                //cancelAndDelete(tsk);
                 //cancelAndDelete(tsk);
                 //To cloud
                 //sendDelayed(wsm->dup(),0.1, "cloud$o");
@@ -150,13 +153,15 @@ void EdgeServerApplLayerMAOCO::initialize(int stage) {
 
         getParentModule()->subscribe(POST_MODEL_CHANGE, this);
 
-        /************MAOCO*******************************/
+/************MAOCO*******************************************************/
         testVector1.setName("test vector 1");
         testVector2.setName("test vector 2");
         testVector3.setName("test vector 3");
+
+        delayToCloud=par("delayToCloud");
        //migrationCost=par("migrationCost");
        // testVector1.record(1.0);
-
+/***********************************************************************/
     }
 
 

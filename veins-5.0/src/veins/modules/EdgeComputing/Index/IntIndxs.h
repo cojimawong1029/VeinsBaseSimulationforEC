@@ -1,0 +1,17 @@
+/*
+ * IntIndxs.h
+ *
+ *  Created on: 2020Äê4ÔÂ29ÈÕ
+ *      Author: cojims
+ */
+
+#ifndef SRC_VEINS_MODULES_EDGECOMPUTING_INDEX_INTINDXS_H_
+#define SRC_VEINS_MODULES_EDGECOMPUTING_INDEX_INTINDXS_H_
+
+
+enum PSIDS {BROADCASTPSID=1010};
+
+
+
+
+#endif /* SRC_VEINS_MODULES_EDGECOMPUTING_INDEX_INTINDXS_H_ */

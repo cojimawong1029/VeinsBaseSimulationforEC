@@ -23,6 +23,12 @@ class AddDelay : public cSimpleModule
     int downOut;
     double dataTransRate;
     double rateLossRate;
+    cOutVector Lengths;
+    cOutVector WSMdataRates;
+    cOutVector SendWSMdelays;
+    cOutVector currentdataRate;
+    cMessage* dataRateChange;
+    simtime_t rateChangeInterval;
 
 
   public:
@@ -31,6 +37,11 @@ class AddDelay : public cSimpleModule
   protected:
     virtual void initialize() override;
     virtual void handleMessage(cMessage *msg) override;
+    virtual void finish(){
+        cSimpleModule::finish();
+        cancelAndDelete(dataRateChange);
+    }
+
 
 
 

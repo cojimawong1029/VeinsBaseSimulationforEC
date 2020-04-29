@@ -54,8 +54,13 @@ simple CarApplMAOCO extends BaseWaveApplLayer
         double alphainLya=default(1);
         double betainLya=default(50);
         double gammainLya=default(1);
+        double rateLossRate=default(0.99);
+        double migrationDelay=default(0.1);
+        double bestDis=default(235);
         
         int chosenRSUway=default(1);
+        
+        double migrationCost=default(75);
   
 
 

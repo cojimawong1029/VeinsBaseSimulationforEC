@@ -18,6 +18,7 @@
 #include <veins/modules/edgecomputing/MAOCO/MAOCOdecider.h>
 
 #include <map>
+#include <vector>
 
 class CarApplMAOCO : public BaseWaveApplLayer {
     public:
@@ -80,7 +81,7 @@ class CarApplMAOCO : public BaseWaveApplLayer {
 
         cOutVector ByteLengths;
         cOutVector puis;
-        cOutVector cc;
+
 
 
 //        std::map<int,simtime_t> applstarts;
@@ -100,6 +101,9 @@ class CarApplMAOCO : public BaseWaveApplLayer {
         double vehicleSpeed{0};
         double xposition;
         double yposition;
+        double rateLossRate=0.99;
+        double migrationCost;
+        double migrationDelay;
         Coord position;
         cOutVector xPositions;
         cOutVector yPositions;
@@ -113,12 +117,14 @@ class CarApplMAOCO : public BaseWaveApplLayer {
 
         std::map<int,Coord> RSUlocations;
         std::map<int,double> RSUprices;
+        std::map<int,double> RSUdatarates;
         int connectedRSUID;
         int chosenRSUway;
 
 
         virtual int choseOffloadRSU(TaskRequest* tsk, int currentRSUID);
         virtual int choseOffloadRSUbyLyapunov(TaskRequest* tsk);
+        virtual int choseOffloadRSUbyGreddy(TaskRequest* tsk);
         virtual int choseOffloadRSUbyPassive(TaskRequest* tsk);
 
         std::map<int,Player*> players;
@@ -126,9 +132,17 @@ class CarApplMAOCO : public BaseWaveApplLayer {
 
         cOutVector TaskCosts;
         cOutVector chosenK;
+        cOutVector TSKevaluateDelays;
+        cOutVector TSKdelayinserver;
+
+
+        cOutVector VirtualQueue1;
+        cOutVector VirtualQueue2;
 
 
         MAOCOdecider* decider;
+
+        double bestDis;
 
 
 
@@ -147,6 +161,8 @@ class CarApplMAOCO : public BaseWaveApplLayer {
         cOutVector testVector3;
         cOutVector testVector4;
         cOutVector testVector5;
+        cOutVector testVector6;
+        cOutVector testVector7;
 
 
 

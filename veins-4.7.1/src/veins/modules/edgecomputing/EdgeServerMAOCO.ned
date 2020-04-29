@@ -31,7 +31,7 @@ module EdgeServerMAOCO
         string applType = default("org.car2x.veins.modules.application.traci.MyVeinsApp"); //type of the application layer
         string nicType = default("Nic80211p"); // type of network interface card
         //string externalId; // TraCI server's id of the junction/tls managed by this module
-        string cpuType = default("ComputerEdge");
+        string cpuType = default("ComputerEdgeMAOCO");
         //string memoryType = default("Memory");
         @display("i=device/accesspoint");
     gates:

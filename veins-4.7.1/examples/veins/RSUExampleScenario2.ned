@@ -20,6 +20,7 @@ import org.car2x.veins.modules.edgecomputing.EvaluateModule.EvaluateModule;
 
 network RSUExampleScenario2 extends Scenario
 {
+    @display("bgb=300,200");
     //@display("bgi=maps/grid,s;bgb=2500,2500;bgu=,");
     submodules:
         rsu1: EdgeServer {

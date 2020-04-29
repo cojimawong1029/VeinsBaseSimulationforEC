@@ -85,6 +85,15 @@ packet TaskRequest {
     double computationamout;
     double startComputationTime;
     double ComputationGain;
+    
+    double evaluateTime=0;
+    double evaluateCost=0;
+    
+    
+    double timetoserver;
+    double timefromserver;
+    double timeTransDelay;
+  
    
     
     

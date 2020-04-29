@@ -38,7 +38,8 @@ packet WSMwithSignal extends WaveShortMessage {
 	
 	bool isCloudExecution=0;
 	double relatedSpeed;
-	
+	double basicDataRate;
+	double transDelay;
 	
 	
 }

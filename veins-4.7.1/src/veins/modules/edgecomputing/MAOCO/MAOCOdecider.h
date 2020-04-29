@@ -16,6 +16,7 @@
 class MAOCOdecider{
 private:
     double alpha,beta,gamma;
+    double n=1;
     double V;
     std::vector<double> Q;
 
@@ -36,6 +37,10 @@ public:
     }
     virtual int getQsize(){
         return Q.size();
+    }
+
+    virtual void setN(double n){
+        this->n=n;
     }
 
     virtual double getQbyIndex(int index){
@@ -59,6 +64,9 @@ public:
     virtual double findBestKbyItera(double delay,double costRate);
     virtual double findBestKbyIterawithPlayer(double qi,double cost,Player* dss);
     virtual double findBestKbyIterawithPlayerMath(double qi,double costRate,Player* dss);
+    virtual double findBestKbyIterawithPlayerMath2(double qi,double costRate,Player* dss);
+    virtual double findBestKbyIterawithPlayerMath3(double qi,double costRate,Player* dss);
+
 
 
 

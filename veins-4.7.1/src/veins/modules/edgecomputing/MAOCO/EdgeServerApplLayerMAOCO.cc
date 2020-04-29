@@ -21,39 +21,25 @@ void EdgeServerApplLayerMAOCO::onWSM(WaveShortMessage* wsm) {
         TaskRequest *tsk = dynamic_cast<TaskRequest*>(wsm->getObject(
             "taskRequest"));
         ASSERT(tsk);
+        tsk->setTimetoserver(getSimulation()->getSimTime().dbl());
         if(dynamic_cast<WSMwithSignal*>(wsm)->getConnectedRSUID()==myId){
             if(!dynamic_cast<WSMwithSignal*>(wsm)->getIsCloudExecution()){
                 if(!dynamic_cast<WSMwithSignal*>(wsm)->getIsMigration()){
-                    //Edge Execution
-                    // if (queue < 5 && tsk->getPurchexe()==1) {
+
                     tsk->setStartComputationTime(getSimulation()->getSimTime().dbl());
                     send(tsk->dup(),"cpu$o");
 
-                    //testVector1.record(1.0);
-                    //cancelAndDelete(tsk);
-                    // benefits+=(tsk->getQjE()*tsk->getRiE());
-                    //  beneHis.record(benefits);
-                    //  sendDelayed(tsk->dup(),0.1, "cloud$o");
-                    // }
 
             }else{
                 tsk->setIsMigration(1);
                 tsk->setTargetMigrationID(dynamic_cast<WSMwithSignal*>(wsm)->getTargetMigrationID());
 
-                //Migration
                 sendDelayed(tsk->dup(),delayToCloud,"cloud$o");
-                //cancelAndDelete(tsk);
-                //testVector2.record(1.0);
-                //cancelAndDelete(tsk);
-                //sendDelayed(tsk->dup(),0.1, "cloud$o");
+
             }}else{
                 tsk->setIsCloudExecution(1);
                 sendDelayed(tsk->dup(),delayToCloud,"cloud$o");
-                //testVector3.record(1.0);
-                //cancelAndDelete(tsk);
-                //cancelAndDelete(tsk);
-                //To cloud
-                //sendDelayed(wsm->dup(),0.1, "cloud$o");
+
             }
         }
     }
@@ -62,15 +48,9 @@ void EdgeServerApplLayerMAOCO::onWSM(WaveShortMessage* wsm) {
 }
 
 void EdgeServerApplLayerMAOCO::finish(){
-//    recordScalar("position x", xposition);
-//    recordScalar("position y", yposition);
+
     BaseWaveApplLayer::finish();
 
-
-    //MAOCO related
-//    RSUposition = RSUmobility->getCurrentPosition();
-//    xposition=RSUposition.x;
-//    yposition=RSUposition.y;
     recordScalar("position x", xposition);
     recordScalar("position y", yposition);
 
@@ -98,12 +78,7 @@ void EdgeServerApplLayerMAOCO::initialize(int stage) {
         WATCH(appldelay);
         WATCH(ujc);
         WATCH(pricecloud);
-        //getSimulation()->getSystemModule()->subscribe("ujc",this);
 
-
-
-        //MAOCO related
-        //get mobility object
 
         RSUmobility= FindModule<BaseMobility*>::findSubModule(getParentModule());
         ASSERT(RSUmobility);
@@ -114,23 +89,14 @@ void EdgeServerApplLayerMAOCO::initialize(int stage) {
         WATCH(minp);
         WATCH(numofcons);
         WATCH(gateind);
-        //WATCH(numr);
-//        WATCH(xposition);
-//        WATCH(yposition);
 
 
 
-//        alaphaj=par("alaphaj");
-//        betaj=par("betaj");
-//        gamaj=par("gamaj");
-//        geneRate=par("geneRate");
         px=par("lowprice");
         py=par("changerate");
         tau=par("changeindictor");
         channelUsed=par("channelUsed");
-        //position=mobility->getCurrentPosition();
-        //curPosition = mobility->getCurrentPosition();
-         //this function doesnt work in RSU
+
 
 
         nature=new Nature(px,py,tau);
@@ -138,18 +104,13 @@ void EdgeServerApplLayerMAOCO::initialize(int stage) {
         getParentModule()->subscribe("uj", this);
         getParentModule()->subscribe("test", this);
         getSimulation()->getSystemModule()->subscribe("price",this);
-  //      getParentModule()->subscribe("ujc", this);
-        //ujs.setName("CPU rs");
 
- //       minps.setName("min ps");
- //       maxps.setName("max ps");
+
         senps.setName("sen ps");
         numofus.setName("connected cars");
         ujss.setName("ujss");
         ujss.record(0);
-//        beneHis.setName("benefits");
 
-//        beneHis.record(0);
 
         getParentModule()->subscribe(POST_MODEL_CHANGE, this);
 
@@ -159,8 +120,7 @@ void EdgeServerApplLayerMAOCO::initialize(int stage) {
         testVector3.setName("test vector 3");
 
         delayToCloud=par("delayToCloud");
-       //migrationCost=par("migrationCost");
-       // testVector1.record(1.0);
+
 /***********************************************************************/
     }
 
@@ -188,11 +148,12 @@ void  EdgeServerApplLayerMAOCO::receiveSignal(cComponent *source, simsignal_t si
 
 void EdgeServerApplLayerMAOCO::handleTaskAck(cMessage* msg) {
     TaskRequest* tsk = dynamic_cast<TaskRequest*>(msg);
-    double cost=(getSimulation()->getSimTime().dbl()-tsk->getStartComputationTime())*tsk->getComputationprice()*tsk->getComputationamout()*10;
-    //double cost=tsk->getComputationprice()*tsk->getComputationamout()*10;
+    tsk->setTimefromserver(getSimulation()->getSimTime().dbl());
+    double cost=(getSimulation()->getSimTime().dbl()-tsk->getStartComputationTime())*tsk->getComputationprice()*tsk->getComputationamout();
+
     testVector1.record(cost);
     tsk->setTotalCost(tsk->getTotalCost()+cost);
-    //tsk->setRiE(dso->calUnitRate(tsk->getGeneRate(),tsk->getTTh(),tsk->getGeneRate(),tsk->getBeta(),tsk->getGama()));
+
     WaveShortMessage* wsm = new WaveShortMessage();
     populateWSM(wsm);
     wsm->setWsmData("TaskACK");
@@ -268,11 +229,12 @@ void EdgeServerApplLayerMAOCO::handleMessage(cMessage* msg) {
     } else if (msg->getArrivalGateId() == cpu) {
         handleTaskAck(msg);
     } else if (msg->getArrivalGateId() == cloud) {
-        if(dynamic_cast<TaskRequest*>(msg)->getCloudToEdgeExe()==0)
-        handleTaskAck(msg);
+        if(dynamic_cast<TaskRequest*>(msg)->getCloudToEdgeExe()==0){
+        handleTaskAck(msg);}
         else if(dynamic_cast<TaskRequest*>(msg)->getCloudToEdgeExe()==1){
             TaskRequest* tsk=dynamic_cast<TaskRequest*>(msg);
             tsk->setStartComputationTime(getSimulation()->getSimTime().dbl());
+            tsk->setTimetoserver(getSimulation()->getSimTime().dbl());
             send(tsk->dup(),"cpu$o");
         }
     } else if (msg->getArrivalGateId() == -1) {

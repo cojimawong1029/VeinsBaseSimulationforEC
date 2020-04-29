@@ -18,14 +18,19 @@ Player::Player(double alapha,double beta,double gamma,double lambda,double mu,do
     this->sr=sr;
 }
 
+double Player::getUtilityPre2(double texe,double cost){
+    return alapha*pow((1/texe*tth),beta)-gamma*cost;
+}
+
+
 double Player::getUtilityPre(double qi, double data, double datarate,double pi,double getlink){
     double texe=getED(qi,data,datarate,getlink);
     return alapha*pow((1/texe*tth),beta)-gamma*qi*pi;
 }
 
 double Player::getEWwithK(double qi,double K){
-    double rou=this->lambda/qi/(this->mu/K);
-    return (1/qi/(this->mu/K))+(this->lambda*(pow((1/qi/(this->mu/K)),2)))/(2*(1-rou));
+    double rou=this->lambda/(qi*(this->mu/K));
+    return (1/(qi*(this->mu/K)))+(this->lambda*(pow((1/(qi*(this->mu/K))),2)))/(2*(1-rou));
 }
 
 double Player::getEW(double qi){

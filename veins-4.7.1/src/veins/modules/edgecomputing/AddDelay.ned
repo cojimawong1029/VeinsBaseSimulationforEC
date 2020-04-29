@@ -21,7 +21,8 @@ simple AddDelay
         @class(AddDelay);
         @display("i=block/arrival");
         double dataTransRate=default(27);
-        double rateLossRate=default(1.01);
+        double rateLossRate=default(0.99);
+        double rateChangeInterval @unit("s") = default(0.1s);
 
     gates:
         input downIn;

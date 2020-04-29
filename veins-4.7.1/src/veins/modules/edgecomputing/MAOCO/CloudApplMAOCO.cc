@@ -71,12 +71,6 @@ void CloudApplMAOCO::initialize() {
 
 void CloudApplMAOCO::handleSelfMsg(cMessage* msg) {
 
-//      emit(price,49);
-//    maxp=dso->calUnitRate(geneRate, 0.1/2, 1000.0/110,betaj , gamaj, ujc,1.0);
-//    minp=dso->calUnitRate(geneRate, 0.1/2, 1000.0/110,betaj , gamaj, ujc,0.0);
-//    maxps.record(maxp);
-//    minps.record(minp);
-//    senps.record(dso->calUnitRate(geneRate, 0.1/2, 1000.0/110,betaj , gamaj, ujc));
       scheduleAt(simTime() + sendprice, sendp);
 
 
@@ -84,10 +78,7 @@ void CloudApplMAOCO::handleSelfMsg(cMessage* msg) {
 }
 void  CloudApplMAOCO::receiveSignal(cComponent *source, simsignal_t signalID, double d, cObject *details){
     std::string name=getSignalName(signalID);
-//    if(!name.compare("test")){
-//        this->ts=d;
-//
-//    }
+
     if(!name.compare("occucloud")){
         this->ujc=d;
     }
@@ -104,8 +95,6 @@ void CloudApplMAOCO::handleTaskAck(cMessage* msg) {
     tsk->setTotalCost(tsk->getTotalCost()+cost);
     int i=gate(tsk->getCloudGate())->getIndex();
     i=gate("connect$o",i)->getId();
-   //tsk->setRiC(dso->calUnitRate(tsk->getGeneRate(),tsk->getTTh(),tsk->getGeneRate(),tsk->getBeta(),tsk->getGama()));
-   //tsk->setExe(2);
     sendDelayed(tsk,delayToEdge,i);
 }
 

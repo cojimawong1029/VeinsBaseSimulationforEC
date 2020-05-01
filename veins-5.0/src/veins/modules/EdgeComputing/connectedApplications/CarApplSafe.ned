@@ -26,6 +26,7 @@ simple CarApplSafe extends DemoBaseApplLayer
     parameters:
         @class(veins::CarApplSafe);
         @display("i=block/MAOCO/appl");
+        double senseStateInterval@unit(s)=default(0.1s);
 
 
 

@@ -53,7 +53,6 @@ void PhyLayer80211p::initialize(int stage)
         ccaThreshold = pow(10, par("ccaThreshold").doubleValue() / 10);
         allowTxDuringRx = par("allowTxDuringRx").boolValue();
         collectCollisionStatistics = par("collectCollisionStatistics").boolValue();
-
         // Create frequency mappings and initialize spectrum for signal representation
         Spectrum::Frequencies freqs;
         for (auto& channel : IEEE80211ChannelFrequencies) {

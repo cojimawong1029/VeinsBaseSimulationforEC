@@ -28,7 +28,7 @@ using namespace veins;
 
 bool DeciderResult::isSignalCorrect() const
 {
-    return isCorrect;
+    return true;//ignore the transmission error;
 }
 
 Decider::Decider(cComponent* owner, DeciderToPhyInterface* phy)

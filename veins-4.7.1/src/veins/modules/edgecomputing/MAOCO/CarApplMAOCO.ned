@@ -21,6 +21,7 @@
 package org.car2x.veins.modules.edgecomputing.MAOCO;
 import org.car2x.veins.modules.application.ieee80211p.BaseWaveApplLayer;
 
+
 simple CarApplMAOCO extends BaseWaveApplLayer
 {
     parameters:
@@ -71,4 +72,5 @@ simple CarApplMAOCO extends BaseWaveApplLayer
         //inout cpu;
         //inout memory;
         inout taskManager;
+        inout MatLab;
 }

@@ -21,9 +21,12 @@
 package org.car2x.veins.modules.edgecomputing;
 
 import org.car2x.veins.base.modules.*;
+import org.car2x.veins.modules.edgecomputing.MatLabInterface.MatLabInterface;
+import org.car2x.veins.modules.mac.ieee80211p.Mac1609_4;
 import org.car2x.veins.modules.nic.Nic80211p;
 import org.car2x.veins.modules.edgecomputing.MAOCO.*;
 import org.car2x.veins.modules.edgecomputing.*;
+
 
 
 module CarNodeMAOCO
@@ -57,6 +60,9 @@ module CarNodeMAOCO
             @display("p=176,49");
         }
 
+        matLab: MatLabInterface {
+            @display("p=267,50");
+        }
     connections:
         nic.upperLayerOut --> appl.lowerLayerIn;
         nic.upperLayerIn <-- appl.lowerLayerOut;
@@ -66,4 +72,7 @@ module CarNodeMAOCO
         veinsradioIn --> nic.radioIn;
 
         appl.taskManager <--> cpu.applLayer;
+        appl.MatLab$o --> matLab.datain;
+        appl.MatLab$i <-- matLab.resultout;
+        
 }

@@ -18,6 +18,7 @@ import org.car2x.veins.modules.edgecomputing.EdgeServer;
 import org.car2x.veins.nodes.Scenario;
 import org.car2x.veins.modules.edgecomputing.CloudServerMAOCO;
 import org.car2x.veins.modules.edgecomputing.EvaluateModule.EvaluateModule;
+import org.car2x.veins.modules.edgecomputing.MatLabInterface.MatLabCommand;
 
 network RSUExampleScenarioStraight extends Scenario
 {
@@ -53,11 +54,6 @@ network RSUExampleScenarioStraight extends Scenario
             @display("p=999,50;is=l");
         }
 
-
-
-
-
-
         cloud: CloudServerMAOCO {
             @display("p=1053,151;is=l");
         }
@@ -65,6 +61,10 @@ network RSUExampleScenarioStraight extends Scenario
         evaluate: EvaluateModule {
 
             @display("p=30,68");
+        }
+
+        matlabCo: MatLabCommand {
+            @display("p=28.73,167.31");
         }
 
 

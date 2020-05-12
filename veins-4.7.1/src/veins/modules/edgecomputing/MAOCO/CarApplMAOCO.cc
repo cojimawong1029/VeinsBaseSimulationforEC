@@ -237,6 +237,192 @@ int CarApplMAOCO::choseOffloadRSUbyLyapunov(TaskRequest* tsk){
 }
 
 
+std::string CarApplMAOCO::UDPServer(std::string data){
+    WORD wVersionRequested;
+    WSADATA wsaData;
+    int err;
+
+    wVersionRequested = MAKEWORD(1,1);
+
+    err = WSAStartup(wVersionRequested, &wsaData);
+    if(err != 0)
+    {
+    }
+
+    if(LOBYTE(wsaData.wVersion) != 1 ||
+      HIBYTE(wsaData.wVersion) != 1)
+    {
+      WSACleanup();
+    }
+
+
+    SOCKET sockSrv = socket(AF_INET,SOCK_DGRAM,0);
+    SOCKET sockSrvRec = socket(AF_INET,SOCK_DGRAM,0);
+
+    sockaddr_in  addrSrv;
+    sockaddr_in  addrSrvRec;
+    addrSrv.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
+    addrSrv.sin_family = AF_INET;
+    addrSrv.sin_port = htons(6969);
+    addrSrvRec.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
+    addrSrvRec.sin_family = AF_INET;
+    addrSrvRec.sin_port = htons(6980);
+    int nResult = bind(sockSrvRec, (SOCKADDR *)&addrSrvRec, sizeof(addrSrvRec));
+
+
+    int len = sizeof(SOCKADDR);
+
+
+    char recvBuf[100];
+    //    char sendBuf[100]="Hello Server";
+    //    char tempBuf[100];
+
+
+
+    sendto(sockSrv,data.c_str(),strlen(data.c_str())+1,0,(SOCKADDR*)&addrSrv,len);
+    //closesocket(sockSrv);
+    int RecF=recvfrom(sockSrvRec,recvBuf,100,0,(SOCKADDR*)&addrSrvRec,&len);
+
+    std::ofstream OsWrite("ot.txt",std::ofstream::app);
+    OsWrite<<recvBuf;
+    OsWrite<<RecF;
+    OsWrite<<std::endl;
+    OsWrite.close();
+
+
+
+    closesocket(sockSrv);
+    closesocket(sockSrvRec);
+    return recvBuf;
+}
+
+
+int CarApplMAOCO::choseOffloadRSUbyLyapunov2(TaskRequest* tsk){
+
+    double maxUti=0;
+    int maxUtiRSU;
+    std::vector<double> addQy;
+    int id;
+    double bestK=10;
+    double evaluateDelay=0;
+    double qq=0;
+    double deW=0;
+    double deSW=0;
+    double deTW=0;
+    double deCO=0;
+    for(auto it=players.begin();it!=players.end();it++){
+        dss=it->second;
+        id=it->first;
+        if(id==currentRSUID){
+            double qi=dss->iterQ();
+            double delay;
+            double priceRate=RSUprices[id]/dss->getMu();
+            double K=decider->findBestKbyIterawithPlayerMath2(qi,priceRate,dss);
+
+//            UDPData* mat=new UDPData("UDP");
+//            mat->setData("Hello,Test!");
+//            send(mat,"MatLab$o");
+
+            delay=K*tsk->getMi()/qi/10000;
+            double temSW=delay;
+            double nowdr=RSUdatarates[id]*pow(rateLossRate,vehicleSpeed*0.36);
+            double dtt=5000/1024.0/nowdr;
+            delay=delay+dtt;
+            double temW=delay;
+            double cost=RSUprices[id]/dss->getMu()*K;
+            double P=decider->getP(delay,cost,K);
+            std::vector<double> temy;
+            double SUM=0;
+            for (auto itt=RSUlocations.begin();itt!=RSUlocations.end();itt++){
+                if(itt->first==it->first){
+                    SUM=SUM+getDistance(xposition,yposition,(itt->second).x,(itt->second).y)-200;
+                }else{
+                    SUM=SUM+0;
+                }
+            }
+            temy.push_back(SUM);
+            double tem=decider->getLyapnovValue(P,temy);
+            if(tem<=maxUti||maxUtiRSU==0){
+                maxUti=tem;
+                maxUtiRSU=it->first;
+                addQy=temy;
+                bestK=K;
+                qq=qi;
+                deW=temW;
+                deSW=temSW;
+                deTW=5000/1024.0/nowdr;
+                deCO=cost;
+
+            }
+        }else{
+            double qi=dss->iterQ();
+
+            double delay;
+            double priceRate=RSUprices[id]/dss->getMu()+0.1;
+
+            double K=decider->findBestKbyIterawithPlayerMath2(qi,priceRate,dss);
+
+            delay=K*tsk->getMi()/qi/10000;
+
+            double temSW=delay;
+            double nowdr=RSUdatarates[id]*pow(rateLossRate,vehicleSpeed*0.36);
+            double dtt=5000/1024.0/nowdr;
+            delay=delay+dtt+migrationDelay+2*5000/1024.0/500000*8;
+
+            double temW=delay;
+
+            double cost=RSUprices[id]/dss->getMu()*K+migrationCost;
+            double P=decider->getP(delay,cost,K);
+            std::vector<double> temy;
+
+            double SUM=0;
+            for (auto itt=RSUlocations.begin();itt!=RSUlocations.end();itt++){
+                if(itt->first==it->first){
+                    SUM=SUM+getDistance(xposition,yposition,(itt->second).x,(itt->second).y)-200;
+                }else{
+                    SUM=SUM+0;
+                }
+            }
+            temy.push_back(SUM);
+            double tem=decider->getLyapnovValue(P,temy);
+            if(tem<=maxUti||maxUtiRSU==0){
+                maxUti=tem;
+                maxUtiRSU=it->first;
+                addQy=temy;
+                bestK=K;
+                qq=qi;
+                deSW=temSW;
+                deW=temW;
+                deTW=5000/1024.0/nowdr;
+                deCO=cost;
+
+            }
+        }
+    }
+
+
+
+    dss=players[maxUtiRSU];
+    tsk->setQjE(qq);
+    tsk->setRiE(RSUprices[maxUtiRSU]);
+    tsk->setPurchexe(1);
+    tsk->setMi(bestK*tsk->getMi());
+    tsk->setEvaluateTime(deW);
+    tsk->setComputationprice(tsk->getRiE());
+    tsk->setComputationamout(tsk->getQjE());
+    tsk->setComputationGain(bestK);
+    tsk->setEvaluateCost(deCO);
+    dss->addPreDecision(tsk->getQjE(),dss->getUtilityPre2(deW,tsk->getComputationGain()*tsk->getComputationprice()/dss->getMu()));
+    addQy.push_back(deW-0.1);
+    decider->updateQ(addQy);
+    VirtualQueue1.record(decider->getQbyIndex(1));
+    VirtualQueue2.record(decider->getQbyIndex(2));
+    return maxUtiRSU;
+
+
+}
+
+
 int CarApplMAOCO::choseOffloadRSUbyGreddy(TaskRequest* tsk){
 
     double maxUti=0;
@@ -352,6 +538,7 @@ void CarApplMAOCO::handleSelfMsg(cMessage* msg) {
     if (msg == startTaskMsg) {
 
 
+
         scheduleAt(simTime() +  exponential(taskGeneInterval), stopTaskMsg);
 
         TaskRequest * tsk = new TaskRequest("taskRequest");
@@ -422,6 +609,8 @@ void CarApplMAOCO::handleSelfMsg(cMessage* msg) {
         tsk->setBeta(1);
         tsk->setGama(0.001);
         tsk->setGenerateTime(getSimulation()->getSimTime().dbl());
+
+
 
 
 /*********************MAOCO related***************************/

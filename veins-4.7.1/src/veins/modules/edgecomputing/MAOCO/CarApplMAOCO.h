@@ -14,8 +14,9 @@
 #include "veins/base/utils/Coord.h"
 #include "veins/modules/edgecomputing/MAOCO/WSMwithSignal_m.h"
 #include "veins/modules/edgecomputing/Informations/PsidList.h"
-#include <veins/modules/edgecomputing/MAOCO/MAOCOdecider.h>
-#include <veins/modules/edgecomputing/MAOCO/MAOCOdecider.h>
+#include "veins/modules/edgecomputing/MAOCO/MAOCOdecider.h"
+#include "veins/modules/edgecomputing/MAOCO/MAOCOdecider.h"
+#include "veins/modules/edgecomputing/MatLabInterface/UDPData_m.h"
 
 #include <map>
 #include <vector>
@@ -124,8 +125,10 @@ class CarApplMAOCO : public BaseWaveApplLayer {
 
         virtual int choseOffloadRSU(TaskRequest* tsk, int currentRSUID);
         virtual int choseOffloadRSUbyLyapunov(TaskRequest* tsk);
+        virtual int choseOffloadRSUbyLyapunov2(TaskRequest* tsk);
         virtual int choseOffloadRSUbyGreddy(TaskRequest* tsk);
         virtual int choseOffloadRSUbyPassive(TaskRequest* tsk);
+        virtual std::string UDPServer(std::string data);
 
         std::map<int,Player*> players;
         Player* dss;

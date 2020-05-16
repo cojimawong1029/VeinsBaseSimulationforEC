@@ -146,6 +146,10 @@ class CarApplMAOCO : public BaseWaveApplLayer {
         MAOCOdecider* decider;
 
         double bestDis;
+        bool enableUDP;
+        double alphainLya;
+        double betainLya;
+        double gammainLya;
 
 
 //For statistics;

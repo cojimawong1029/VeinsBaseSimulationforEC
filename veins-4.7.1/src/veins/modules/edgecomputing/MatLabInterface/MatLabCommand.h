@@ -21,6 +21,7 @@ class MatLabCommand : public cSimpleModule
 
     SOCKET sockclient;
     struct sockaddr_in addr;
+    bool enableUDP;
 
 
 
@@ -29,8 +30,9 @@ class MatLabCommand : public cSimpleModule
 
   protected:
 
-
+  virtual void initialize() override;
   virtual void finish();
+
 
 
 

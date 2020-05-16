@@ -55,6 +55,11 @@ public:
 
     }
 
+    virtual double getN(){
+        return this->n;
+    }
+
+
     virtual void updateQ(std::vector<double> y);
     virtual double getLyapnovValue(double P,std::vector<double> y);
     virtual double findBestKSimple(double delay,double costRate){

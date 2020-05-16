@@ -62,6 +62,7 @@ simple CarApplMAOCO extends BaseWaveApplLayer
         int chosenRSUway=default(1);
         
         double migrationCost=default(75);
+        bool enableUDP=default(false);
   
 
 

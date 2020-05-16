@@ -445,11 +445,45 @@ int CarApplMAOCO::choseOffloadRSUbyGreddy(TaskRequest* tsk){
             double qi=dss->iterQ();
             double delay;
             double priceRate=RSUprices[id]/dss->getMu();
-            double K=decider->findBestKbyIterawithPlayerMath3(qi,priceRate,dss);
-            delay=K*tsk->getMi()/qi/10000;
-            double temSW=delay;
+            //double K=decider->findBestKbyIterawithPlayerMath3(qi,priceRate,dss);
+            double K=1;
             double nowdr=RSUdatarates[id]*pow(rateLossRate,vehicleSpeed*0.36);
             double dtt=5000/1024.0/nowdr;
+
+            std::string sendData="";
+            sendData.append(std::to_string(alphainLya));
+            sendData.append(",");
+
+            sendData.append(std::to_string(betainLya));
+            sendData.append(",");
+
+            sendData.append(std::to_string(gammainLya));
+            sendData.append(",");
+
+            sendData.append(std::to_string(dtt));
+            sendData.append(",");
+
+            sendData.append(std::to_string(dss->getMu()));
+            sendData.append(",");
+
+            sendData.append(std::to_string(qi));
+            sendData.append(",");
+
+            sendData.append(std::to_string(decider->getN()));
+            sendData.append(",");
+
+            sendData.append(std::to_string(RSUprices[id]));
+
+
+
+
+
+
+            UDPServer(sendData);
+
+            delay=K*tsk->getMi()/qi/10000;
+            double temSW=delay;
+
             delay=delay+dtt;
             double temW=delay;
             double cost=RSUprices[id]/dss->getMu()*K;
@@ -693,6 +727,7 @@ void CarApplMAOCO::initialize(int stage) {
         handleRate=par("handleRate");
         tth=par("tTh");
         learnningRate=par("learnningRate");
+        enableUDP=par("enableUDP");
 
         taskmanagerin = findGate("taskManager$i");
         //issend = true;
@@ -721,9 +756,9 @@ void CarApplMAOCO::initialize(int stage) {
         double VinLya=par("VinLya");
         ReV=VinLya;
         decider->setV(VinLya);
-        double alphainLya=par("alphainLya");
-        double betainLya=par("betainLya");
-        double gammainLya=par("gammainLya");
+        alphainLya=par("alphainLya");
+        betainLya=par("betainLya");
+        gammainLya=par("gammainLya");
         bestDis=par("bestDis");
         chosenRSUway=par("chosenRSUway");
         rateLossRate=par("rateLossRate");

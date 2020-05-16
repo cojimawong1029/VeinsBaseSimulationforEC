@@ -130,8 +130,7 @@ void EdgeApplSafe::handleSelfMsg(cMessage* msg)
                     int sizeSend=0;
                     for(int ni=0;ni<8;ni++){
                             sendData.append(std::to_string(RSp[ni]));
-                            if(RSp[ni]>=10)sizeSend+=1;
-                            sizeSend+=(sizeof(std::to_string(RSp[ni]).c_str()));
+                            sizeSend+=(std::to_string(RSp[ni]).length());
 
             //            else{
             //                sendData.append("0");

@@ -148,6 +148,13 @@ class CarApplMAOCO : public BaseWaveApplLayer {
         double bestDis;
 
 
+//For statistics;
+        std::vector<double> Redelays;
+        std::vector<double> Recosts;
+        std::vector<double> Reutivalues;
+        double ReV;
+
+
 
 
 

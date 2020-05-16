@@ -719,6 +719,7 @@ void CarApplMAOCO::initialize(int stage) {
         //MAOCO related
         decider=new MAOCOdecider();
         double VinLya=par("VinLya");
+        ReV=VinLya;
         decider->setV(VinLya);
         double alphainLya=par("alphainLya");
         double betainLya=par("betainLya");
@@ -831,6 +832,26 @@ void CarApplMAOCO::finish() {
     recordScalar("chosen RSU way", chosenRSUway);
     emit(taskCompeleteRate, (receiveTasksCount*1.0/generateTasksCount*1.0)*100.0);
 
+    std::ofstream OsWrite("C:/Users/cojims/Desktop/papers/paper2/MAOCOdata/resultofVchange.csv",std::ofstream::app);
+    OsWrite<<myId<<',';
+    OsWrite<<ReV<<',';
+    double summ = std::accumulate(std::begin(Recosts), std::end(Recosts), 0.0);
+    double mean =  summ / Recosts.size();
+    OsWrite<<mean<<',';
+    summ = std::accumulate(std::begin(Redelays), std::end(Redelays), 0.0);
+    mean =  summ / Redelays.size();
+    OsWrite<<mean<<',';
+    summ = std::accumulate(std::begin(Reutivalues), std::end(Reutivalues), 0.0);
+    mean =  summ / Reutivalues.size();
+    OsWrite<<mean<<std::endl;
+    OsWrite.close();
+
+
+//    OsWrite<<recvBuf;
+//    OsWrite<<RecF;
+//    OsWrite<<std::endl;
+//    OsWrite.close();
+
 }
 
 
@@ -848,11 +869,17 @@ void CarApplMAOCO::onWSM(WaveShortMessage* wsm) {
             delays.record(appldelay.dbl());
             emit(applDelaysSignal, appldelay.dbl());
             TaskCosts.record(tsk->getTotalCost());
+
             chosenK.record(tsk->getComputationGain());
             TSKevaluateDelays.record(tsk->getEvaluateTime());
             TSKdelayinserver.record(tsk->getTimefromserver()-tsk->getTimetoserver());
             utilities.record(decider->getP(appldelay.dbl(),tsk->getTotalCost(),tsk->getComputationGain()));
-            testVector1.record(tsk->getEvaluateCost());
+
+
+            Recosts.push_back(tsk->getTotalCost());
+            Redelays.push_back(appldelay.dbl());
+            Reutivalues.push_back(decider->getP(appldelay.dbl(),tsk->getTotalCost(),tsk->getComputationGain()));
+
             receiveTasksCount++;
             offLoadTasksCount++;
         }

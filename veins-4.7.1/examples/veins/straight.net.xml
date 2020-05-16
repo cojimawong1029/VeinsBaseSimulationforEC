@@ -38,10 +38,10 @@
     <location netOffset="0.00,0.00" convBoundary="100.00,50.00,1100.00,50.00" origBoundary="-10000000000.00,-10000000000.00,10000000000.00,10000000000.00" projParameter="!"/>
 
     <edge id="gneE0" from="gneJ1" to="gneJ2" priority="-1">
-        <lane id="gneE0_0" index="0" speed="13.89" length="1000.00" shape="100.00,48.40 1100.00,48.40"/>
+        <lane id="gneE0_0" index="0" speed="10" length="1000.00" shape="100.00,48.40 1100.00,48.40"/>
     </edge>
     <edge id="gneE1" from="gneJ2" to="gneJ1" priority="-1">
-        <lane id="gneE1_0" index="0" speed="13.89" length="1000.00" shape="1100.00,51.60 100.00,51.60"/>
+        <lane id="gneE1_0" index="0" speed="10" length="1000.00" shape="1100.00,51.60 100.00,51.60"/>
     </edge>
 
     <junction id="gneJ1" type="dead_end" x="100.00" y="50.00" incLanes="gneE1_0" intLanes="" shape="100.00,50.00 100.00,53.20 100.00,50.00" rightOfWay="edgePriority"/>

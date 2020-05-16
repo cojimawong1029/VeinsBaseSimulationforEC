@@ -25,7 +25,6 @@ protected:
 
     cOutVector testVector[10];
 
-
 /********STATES***************************************************/
     cOutVector vehicleSpeeds;
     cOutVector lanePositions;
@@ -45,6 +44,9 @@ protected:
 
 
     bool passCrossing=false;
+    bool receiveControl=false;
+    bool UDPMATLAB;
+    double controlSpeed;
 
 
 

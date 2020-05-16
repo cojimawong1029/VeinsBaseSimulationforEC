@@ -147,6 +147,8 @@ void TraCICommandInterface::Vehicle::setSpeed(double speed)
     ASSERT(buf.eof());
 }
 
+
+
 void TraCICommandInterface::Vehicle::setMaxSpeed(double speed)
 {
     uint8_t variableId = VAR_MAXSPEED;
@@ -345,6 +347,12 @@ double TraCICommandInterface::Vehicle::getHeight()
 {
     return traci->genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_HEIGHT, RESPONSE_GET_VEHICLE_VARIABLE);
 }
+
+double TraCICommandInterface::Vehicle::getSigma()
+{
+    return traci->genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_IMPERFECTION, RESPONSE_GET_VEHICLE_VARIABLE);
+}
+
 
 double TraCICommandInterface::Vehicle::getAccel()
 {

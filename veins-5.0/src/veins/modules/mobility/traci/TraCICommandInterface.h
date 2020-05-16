@@ -135,6 +135,8 @@ public:
             connection = &traci->connection;
         }
 
+
+
         void setSpeedMode(int32_t bitset);
         void setSpeed(double speed);
         void setMaxSpeed(double speed);
@@ -159,6 +161,7 @@ public:
         double getHeight();
         double getAccel();
         double getDeccel();
+        double getSigma();
 
         void setParameter(const std::string& parameter, int value);
         void setParameter(const std::string& parameter, double value);

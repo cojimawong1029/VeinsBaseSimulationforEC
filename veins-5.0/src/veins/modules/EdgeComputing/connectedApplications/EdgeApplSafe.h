@@ -36,6 +36,7 @@ protected:
     int RId[8]{0,0,0,0,0,0,0,0};
     double RSp[8]{0,0,0,0,0,0,0,0};
     double RPo[8]{0,0,0,0,0,0,0,0};
+    bool TCPMATLAB;
 
 
 

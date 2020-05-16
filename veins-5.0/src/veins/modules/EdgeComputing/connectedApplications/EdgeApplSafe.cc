@@ -23,6 +23,7 @@ void EdgeApplSafe::initialize(int stage)
 {
     DemoBaseApplLayer::initialize(stage);
     if (stage == 0) {
+        TCPMATLAB=par("TCPMATLAB");
 
 
 
@@ -49,8 +50,11 @@ void EdgeApplSafe::finish()
 
     DemoBaseApplLayer::finish();
     CHAR SOver[15]="SimulationOVER";
-    ::send(sockclient,SOver,15,0);//End Matlab Server
-    closesocket(sockclient);
+    if(TCPMATLAB){
+        ::send(sockclient,SOver,15,0);//End Matlab Server
+        closesocket(sockclient);
+    }
+
 
 
 }
@@ -98,104 +102,85 @@ void EdgeApplSafe::handleSelfMsg(cMessage* msg)
 
 
     if(msg==broadcast){
+        if(TCPMATLAB){
+            if(!ServerReady){
+                       sockclient=socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
+                       if(INVALID_SOCKET == sockclient)
+                       {
+                           SocketErrorIndex.record(1);
+                       }
 
-        if(!ServerReady){
-           sockclient=socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
-           if(INVALID_SOCKET == sockclient)
-           {
-               SocketErrorIndex.record(1);
-           }
+
+                       addr.sin_family = AF_INET;
+                       addr.sin_port = htons(6969);
+                       addr.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
+                       int iRetVal = connect(sockclient,(struct sockaddr*)&addr,sizeof(addr));
+                       if(SOCKET_ERROR == iRetVal)
+                       {
+                           SocketErrorIndex.record(1);
+                           closesocket(sockclient);
+                       }
+                       ServerReady=true;
+                    }
 
 
-           addr.sin_family = AF_INET;
-           addr.sin_port = htons(6969);
-           addr.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
-           int iRetVal = connect(sockclient,(struct sockaddr*)&addr,sizeof(addr));
-           if(SOCKET_ERROR == iRetVal)
-           {
-               SocketErrorIndex.record(1);
-               closesocket(sockclient);
-           }
-           ServerReady=true;
+
+            //        sort(temSpeedData.begin(),temSpeedData.end(),cmp);
+                    std::string sendData="";
+                    int sizeSend=0;
+                    for(int ni=0;ni<8;ni++){
+                            sendData.append(std::to_string(RSp[ni]));
+                            if(RSp[ni]>=10)sizeSend+=1;
+                            sizeSend+=(sizeof(std::to_string(RSp[ni]).c_str()));
+
+            //            else{
+            //                sendData.append("0");
+            //                sizeSend+=1;
+            //            }
+
+                        if(ni!=7){
+                        sendData.append(",");
+                        sizeSend+=1;
+                        }
+                    }
+
+                    ::send(sockclient,sendData.c_str(),sizeSend,0);
+
+                    CHAR szRecv[100] = {0};
+                    recv(sockclient,szRecv,100,0);
+
+//                    std::ofstream OsWrite("ot.txt",std::ofstream::app);
+//                    OsWrite<<szRecv;
+//                    OsWrite<<std::endl;
+//                    OsWrite.close();
+
+
+                    std::stringstream ss;
+                    ss<<szRecv;
+                    double s[8];
+                    ss>>s[0]>>s[1]>>s[2]>>s[3]>>s[4]>>s[5]>>s[6]>>s[7];
+                    CarControl* cctrl=new CarControl();
+                    populateWSM(cctrl);
+                    for(int ni=0;ni<8;ni++){
+                        if(RId[ni]!=0){
+                            cctrl->setVehicleId(ni,RId[ni]);
+                            cctrl->setSpeed(ni,s[ni]);
+                        }else{
+                            cctrl->setVehicleId(ni,0);
+                            cctrl->setSpeed(ni,0);
+                        }
+                    }
+
+                    sendDelayedDown(cctrl,1);
+                    for (int i=0;i<8;i++){
+                        RId[i]=0;
+                        RSp[i]=0;
+                        RPo[i]=0;
+                    }
+
         }
 
 
-
-//        sort(temSpeedData.begin(),temSpeedData.end(),cmp);
-        std::string sendData="";
-        int sizeSend=0;
-        for(int ni=0;ni<8;ni++){
-                sendData.append(std::to_string(RSp[ni]));
-                if(RSp[ni]>=10)sizeSend+=1;
-                sizeSend+=(sizeof(std::to_string(RSp[ni]).c_str()));
-
-//            else{
-//                sendData.append("0");
-//                sizeSend+=1;
-//            }
-
-            if(ni!=7){
-            sendData.append(",");
-            sizeSend+=1;
-            }
-        }
-
-        ::send(sockclient,sendData.c_str(),sizeSend,0);
-
-        CHAR szRecv[100] = {0};
-        recv(sockclient,szRecv,100,0);
-
-        std::ofstream OsWrite("ot.txt",std::ofstream::app);
-        OsWrite<<szRecv;
-        OsWrite<<std::endl;
-        OsWrite.close();
-
-
-        std::stringstream ss;
-        ss<<szRecv;
-        double s[8];
-        ss>>s[0]>>s[1]>>s[2]>>s[3]>>s[4]>>s[5]>>s[6]>>s[7];
-        CarControl* cctrl=new CarControl();
-        populateWSM(cctrl);
-        for(int ni=0;ni<8;ni++){
-            if(RId[ni]!=0){
-                cctrl->setVehicleId(ni,RId[ni]);
-                cctrl->setSpeed(ni,s[ni]);
-            }else{
-                cctrl->setVehicleId(ni,0);
-                cctrl->setSpeed(ni,0);
-            }
-        }
-
-        sendDelayedDown(cctrl,1);
-        for (int i=0;i<8;i++){
-            RId[i]=0;
-            RSp[i]=0;
-            RPo[i]=0;
-        }
-
-
-
-//        std::string sendData=std::to_string(speed);
-//        int sizeSend=sizeof(std::to_string(speed).c_str());
-//        sendData.append(",");
-//        sendData.append(std::to_string(lanePosition));
-//        sizeSend+=(1+sizeof(std::to_string(lanePosition).c_str()));
-//        sendData.append(",");
-//        sendData.append(std::to_string(droadIndex));
-//        sizeSend+=(1+sizeof(std::to_string(droadIndex).c_str()));
-//        ::send(sockclient,sendData.c_str(),sizeSend,0);
-//        CHAR szRecv[3] = {0};
-//        recv(sockclient,szRecv,3,0);
-//        std::stringstream ss;
-//        ss<<szRecv;
-//        double tem;
-//        ss>>tem;
-//        testVector[0].record(tem);
-//        CarControl* cctrl=new CarControl();
-//        cctrl->setTargetSpeed(tem);
-//        populateWSM(cctrl);
-//        sendDown(cctrl);
 
 
 

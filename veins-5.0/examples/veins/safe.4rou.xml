@@ -17,52 +17,52 @@
 -->
 
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
-    <vehicle id="1" depart="0.00"  departSpeed="20.00">
+    <vehicle id="1" depart="0.00"  departSpeed="11.00" departLane="1">
         <route edges="gneE5 gneE0"/>
     </vehicle>
-    <vehicle id="2" depart="0.00" departSpeed="20.00">
+    <vehicle id="2" depart="0.00" departSpeed="20.00" departLane="1">
         <route edges="gneE8 gneE2" color="1,1,0"/>
     </vehicle>
-    <vehicle id="3" depart="0.00" departSpeed="20.00">
+    <vehicle id="3" depart="0.00" departSpeed="16.00" departLane="1">
         <route edges="gneE3 gneE6"/>
     </vehicle>
-    <vehicle id="4" depart="0.00" departSpeed="20.00">
+    <vehicle id="4" depart="0.00" departSpeed="16.00" departLane="1">
         <route edges="gneE8 gneE2"/>
     </vehicle>
-    <vehicle id="5" depart="0.00"  departSpeed="20.00">
+    <vehicle id="5" depart="0.00"  departSpeed="18.00" departLane="1">
      <route edges="gneE5 gneE0"/>
     </vehicle>
-    <vehicle id="6" depart="0.00" departSpeed="20.00">
+    <vehicle id="6" depart="0.00" departSpeed="25.00" departLane="1">
         <route edges="gneE1 gneE4"/>
     </vehicle>
-    <vehicle id="7" depart="0.00" departSpeed="20.00">
+    <vehicle id="7" depart="0.00" departSpeed="16.00" departLane="1">
         <route edges="gneE3 gneE6"/>
     </vehicle>
-    <vehicle id="8" depart="0.00" departSpeed="20.00">
+    <vehicle id="8" depart="0.00" departSpeed="19.50" departLane="1">
         <route edges="gneE8 gneE2"/>
     </vehicle>
-    <vehicle id="9" depart="0.00"  departSpeed="20.00">
+    <vehicle id="9" depart="0.00"  departSpeed="18.50" departLane="1">
         <route edges="gneE5 gneE0"/>
     </vehicle>
-    <vehicle id="10" depart="0.00" departSpeed="20.00">
+    <vehicle id="10" depart="0.00" departSpeed="17.50" departLane="1">
         <route edges="gneE1 gneE4"/>
     </vehicle>
-    <vehicle id="11" depart="0.00" departSpeed="20.00">
+    <vehicle id="11" depart="0.00" departSpeed="18.50" departLane="1">
         <route edges="gneE3 gneE6"/>
     </vehicle>
-    <vehicle id="12" depart="0.00" departSpeed="20.00">
+    <vehicle id="12" depart="0.00" departSpeed="19.90" departLane="1">
         <route edges="gneE8 gneE2"/>
     </vehicle>
-    <vehicle id="13" depart="0.00"  departSpeed="20.00">
+    <vehicle id="13" depart="0.00"  departSpeed="21.50" departLane="1">
      <route edges="gneE5 gneE0"/>
     </vehicle>
-    <vehicle id="14" depart="0.00" departSpeed="20.00">
+    <vehicle id="14" depart="0.00" departSpeed="21.50" departLane="1">
         <route edges="gneE1 gneE4"/>
     </vehicle>
-    <vehicle id="15" depart="0.00" departSpeed="20.00">
+    <vehicle id="15" depart="0.00" departSpeed="19.40" departLane="1">
         <route edges="gneE3 gneE6"/>
     </vehicle>
-    <vehicle id="16" depart="0.00" departSpeed="20.00">
+    <vehicle id="16" depart="0.00" departSpeed="20.00" departLane="1">
         <route edges="gneE8 gneE2"/>
     </vehicle>
 

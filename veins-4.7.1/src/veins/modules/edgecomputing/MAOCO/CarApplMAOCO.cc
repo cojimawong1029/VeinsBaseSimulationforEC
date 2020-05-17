@@ -502,8 +502,7 @@ int CarApplMAOCO::choseOffloadRSUbyLyapunovMATLAB(TaskRequest* tsk){
 }
 
 
-
-int CarApplMAOCO::choseOffloadRSUbyGreddy(TaskRequest* tsk){
+int CarApplMAOCO::choseOffloadRSUbyGreedy(TaskRequest* tsk){
 
     double maxUti=0;
     int maxUtiRSU;
@@ -516,6 +515,118 @@ int CarApplMAOCO::choseOffloadRSUbyGreddy(TaskRequest* tsk){
     double deSW=0;
     double deTW=0;
     double deCO=0;
+
+    for(auto it=players.begin();it!=players.end();it++){
+
+        dss=it->second;
+        id=it->first;
+
+        if(id==currentRSUID){
+            double qi=dss->iterQ();
+            double delay;
+            double priceRate=RSUprices[id]/dss->getMu();
+            //double K=decider->findBestKbyIterawithPlayerMath3(qi,priceRate,dss);
+            double nowdr=RSUdatarates[id]*pow(rateLossRate,vehicleSpeed*0.36);
+            double dtt=5000/1024.0/nowdr;
+
+
+            double K=decider->findBestKbyIterawithPlayerMath3(qi,priceRate,dss,dtt);
+
+            delay=K*tsk->getMi()/qi/10000;
+            double temSW=delay;
+
+            delay=delay+dtt;
+            double temW=delay;
+            double cost=RSUprices[id]/dss->getMu()*K;
+            double P=decider->getP(delay,cost,K);
+
+            if(P<=maxUti||maxUtiRSU==0){
+                maxUti=P;
+                maxUtiRSU=it->first;
+                bestK=K;
+                qq=qi;
+                deW=temW;
+                deSW=temSW;
+                deTW=5000/1024.0/nowdr;
+                deCO=cost;
+
+
+            }
+        }else{
+            double qi=dss->iterQ();
+
+            double delay;
+            double priceRate=RSUprices[id]/dss->getMu()+0.1;
+
+            double nowdr=RSUdatarates[id]*pow(rateLossRate,vehicleSpeed*0.36);
+            double dtt=5000/1024.0/nowdr;
+
+            double K=decider->findBestKbyIterawithPlayerMath3(qi,priceRate,dss,dtt+migrationDelay+2*5000/1024.0/500000*8);
+
+
+
+
+
+//            double K=decider->findBestKbyIterawithPlayerMath3(qi,priceRate,dss);
+
+            delay=K*tsk->getMi()/qi/10000;
+
+            double temSW=delay;
+            delay=delay+dtt+migrationDelay+2*5000/1024.0/500000*8;
+
+
+            double temW=delay;
+
+            double cost=RSUprices[id]/dss->getMu()*K+migrationCost;
+            double P=decider->getP(delay,cost,K);
+
+            if(P<=maxUti||maxUtiRSU==0){
+                maxUti=P;
+                maxUtiRSU=it->first;
+                bestK=K;
+                qq=qi;
+                deSW=temSW;
+                deW=temW;
+                deTW=5000/1024.0/nowdr;
+                deCO=cost;
+
+
+            }
+        }
+    }
+
+
+
+    dss=players[maxUtiRSU];
+    tsk->setQjE(qq);
+    tsk->setRiE(RSUprices[maxUtiRSU]);
+    tsk->setPurchexe(1);
+    tsk->setMi(bestK*tsk->getMi());
+    tsk->setEvaluateTime(deW);
+    tsk->setComputationprice(tsk->getRiE());
+    tsk->setComputationamout(tsk->getQjE());
+    tsk->setComputationGain(bestK);
+    tsk->setEvaluateCost(deCO);
+    dss->addPreDecision(tsk->getQjE(),dss->getUtilityPre2(deW,tsk->getComputationGain()*tsk->getComputationprice()/dss->getMu()));
+    return maxUtiRSU;
+
+
+}
+
+int CarApplMAOCO::choseOffloadRSUbyGreedyMATLAB(TaskRequest* tsk){
+
+    double maxUti=0;
+    int maxUtiRSU;
+    std::vector<double> addQy;
+    int id;
+    double bestK=10;
+    double evaluateDelay=0;
+    double qq=0;
+    double deW=0;
+    double deSW=0;
+    double deTW=0;
+    double deCO=0;
+
     for(auto it=players.begin();it!=players.end();it++){
 
         dss=it->second;
@@ -553,11 +664,17 @@ int CarApplMAOCO::choseOffloadRSUbyGreddy(TaskRequest* tsk){
 
             sendData.append(std::to_string(RSUprices[id]));
 
+
+
             std::string recev=UDPServer(sendData);
             std::stringstream ss;
             ss<<recev;
             double K;
             ss>>K;
+            if(!(K>=1&&K<=50)){
+                K=decider->findBestKbyIterawithPlayerMath3(qi,priceRate,dss,dtt);
+            }
+
 
             delay=K*tsk->getMi()/qi/10000;
             double temSW=delay;
@@ -576,6 +693,7 @@ int CarApplMAOCO::choseOffloadRSUbyGreddy(TaskRequest* tsk){
                 deSW=temSW;
                 deTW=5000/1024.0/nowdr;
                 deCO=cost;
+
 
             }
         }else{
@@ -617,6 +735,13 @@ int CarApplMAOCO::choseOffloadRSUbyGreddy(TaskRequest* tsk){
             double K;
             ss>>K;
 
+            if(!(K>=1&&K<=50)){
+                testVector3.record(1);
+                K=decider->findBestKbyIterawithPlayerMath3(qi,priceRate,dss,dtt+migrationDelay+2*5000/1024.0/500000*8);
+            }
+
+
+
 
 
 //            double K=decider->findBestKbyIterawithPlayerMath3(qi,priceRate,dss);
@@ -641,6 +766,7 @@ int CarApplMAOCO::choseOffloadRSUbyGreddy(TaskRequest* tsk){
                 deW=temW;
                 deTW=5000/1024.0/nowdr;
                 deCO=cost;
+
 
             }
         }
@@ -770,11 +896,14 @@ void CarApplMAOCO::handleSelfMsg(cMessage* msg) {
         case PASSIVEWAY:
             chosenRSUID=choseOffloadRSUbyPassive(tsk);
             break;
-        case GREDDY:
-            chosenRSUID=choseOffloadRSUbyGreddy(tsk);
+        case GREEDY:
+            chosenRSUID=choseOffloadRSUbyGreedy(tsk);
             break;
         case LYAPUNOVMATLAB:
             chosenRSUID=choseOffloadRSUbyLyapunovMATLAB(tsk);
+            break;
+        case GREEDYMATLAB:
+            chosenRSUID=choseOffloadRSUbyGreedyMATLAB(tsk);
             break;
         default:
             chosenRSUID=choseOffloadRSU(tsk,currentRSUID);
@@ -995,6 +1124,21 @@ void CarApplMAOCO::finish() {
     mean =  summ / Reutivalues.size();
     OsWrite<<mean<<std::endl;
     OsWrite.close();
+
+
+    std::ofstream OsWrite2("C:/Users/cojims/Desktop/papers/paper2/MAOCOdata/compare4algorithms.csv",std::ofstream::app);
+    OsWrite2<<myId<<',';
+    OsWrite2<<chosenRSUway<<',';
+    summ = std::accumulate(std::begin(Recosts), std::end(Recosts), 0.0);
+    mean =  summ / Recosts.size();
+    OsWrite2<<mean<<',';
+    summ = std::accumulate(std::begin(Redelays), std::end(Redelays), 0.0);
+    mean =  summ / Redelays.size();
+    OsWrite2<<mean<<',';
+    summ = std::accumulate(std::begin(Reutivalues), std::end(Reutivalues), 0.0);
+    mean =  summ / Reutivalues.size();
+    OsWrite2<<mean<<std::endl;
+    OsWrite2.close();
 
 
 //    OsWrite<<recvBuf;

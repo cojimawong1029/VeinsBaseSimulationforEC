@@ -20,6 +20,6 @@ module MatLabCommand{
     parameters:
     @display("i=block/MAOCO/mat");
     @class(MatLabCommand);
-    bool enableUDP=default(true);
+    bool enableUDP=default(false);
     gates:
 }

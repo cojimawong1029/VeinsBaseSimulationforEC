@@ -70,7 +70,7 @@ public:
     virtual double findBestKbyIterawithPlayer(double qi,double cost,Player* dss);
     virtual double findBestKbyIterawithPlayerMath(double qi,double costRate,Player* dss);
     virtual double findBestKbyIterawithPlayerMath2(double qi,double costRate,Player* dss);
-    virtual double findBestKbyIterawithPlayerMath3(double qi,double costRate,Player* dss);
+    virtual double findBestKbyIterawithPlayerMath3(double qi,double costRate,Player* dss,double tt);
 
 
 

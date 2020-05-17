@@ -126,7 +126,8 @@ class CarApplMAOCO : public BaseWaveApplLayer {
         virtual int choseOffloadRSU(TaskRequest* tsk, int currentRSUID);
         virtual int choseOffloadRSUbyLyapunov(TaskRequest* tsk);
         virtual int choseOffloadRSUbyLyapunovMATLAB(TaskRequest* tsk);
-        virtual int choseOffloadRSUbyGreddy(TaskRequest* tsk);
+        virtual int choseOffloadRSUbyGreedy(TaskRequest* tsk);
+        virtual int choseOffloadRSUbyGreedyMATLAB(TaskRequest* tsk);
         virtual int choseOffloadRSUbyPassive(TaskRequest* tsk);
         virtual std::string UDPServer(std::string data);
 

@@ -297,7 +297,7 @@ std::string CarApplMAOCO::UDPServer(std::string data){
 }
 
 
-int CarApplMAOCO::choseOffloadRSUbyLyapunov2(TaskRequest* tsk){
+int CarApplMAOCO::choseOffloadRSUbyLyapunovMATLAB(TaskRequest* tsk){
 
     double maxUti=0;
     int maxUtiRSU;
@@ -310,6 +310,8 @@ int CarApplMAOCO::choseOffloadRSUbyLyapunov2(TaskRequest* tsk){
     double deSW=0;
     double deTW=0;
     double deCO=0;
+    double MMK=10;
+
     for(auto it=players.begin();it!=players.end();it++){
         dss=it->second;
         id=it->first;
@@ -317,16 +319,51 @@ int CarApplMAOCO::choseOffloadRSUbyLyapunov2(TaskRequest* tsk){
             double qi=dss->iterQ();
             double delay;
             double priceRate=RSUprices[id]/dss->getMu();
-            double K=decider->findBestKbyIterawithPlayerMath2(qi,priceRate,dss);
 
-//            UDPData* mat=new UDPData("UDP");
-//            mat->setData("Hello,Test!");
-//            send(mat,"MatLab$o");
+            double nowdr=RSUdatarates[id]*pow(rateLossRate,vehicleSpeed*0.36);
+            double dtt=5000/1024.0/nowdr;
+
+
+
+            std::string sendData="";
+            sendData.append(std::to_string(alphainLya));
+            sendData.append(",");
+
+            sendData.append(std::to_string(betainLya));
+            sendData.append(",");
+
+            sendData.append(std::to_string(gammainLya));
+            sendData.append(",");
+
+            sendData.append(std::to_string(dtt));
+            sendData.append(",");
+
+            sendData.append(std::to_string(dss->getMu()));
+            sendData.append(",");
+
+            sendData.append(std::to_string(qi));
+            sendData.append(",");
+
+            sendData.append(std::to_string(decider->getN()));
+            sendData.append(",");
+
+            sendData.append(std::to_string(RSUprices[id]));
+            sendData.append(",");
+
+
+            sendData.append(std::to_string(VinLya));
+            sendData.append(",");
+
+            sendData.append(std::to_string(decider->getQbyIndex(2)));
+            std::string recev=UDPServer(sendData);
+            std::stringstream ss;
+            ss<<recev;
+            double K;
+            ss>>K;
 
             delay=K*tsk->getMi()/qi/10000;
             double temSW=delay;
-            double nowdr=RSUdatarates[id]*pow(rateLossRate,vehicleSpeed*0.36);
-            double dtt=5000/1024.0/nowdr;
+
             delay=delay+dtt;
             double temW=delay;
             double cost=RSUprices[id]/dss->getMu()*K;
@@ -360,13 +397,51 @@ int CarApplMAOCO::choseOffloadRSUbyLyapunov2(TaskRequest* tsk){
             double delay;
             double priceRate=RSUprices[id]/dss->getMu()+0.1;
 
-            double K=decider->findBestKbyIterawithPlayerMath2(qi,priceRate,dss);
+            double nowdr=RSUdatarates[id]*pow(rateLossRate,vehicleSpeed*0.36);
+            double dtt=5000/1024.0/nowdr;
+
+            std::string sendData="";
+            sendData.append(std::to_string(alphainLya));
+            sendData.append(",");
+
+            sendData.append(std::to_string(betainLya));
+            sendData.append(",");
+
+            sendData.append(std::to_string(gammainLya));
+            sendData.append(",");
+
+            sendData.append(std::to_string(dtt+migrationDelay+2*5000/1024.0/500000*8));
+            sendData.append(",");
+
+            sendData.append(std::to_string(dss->getMu()));
+            sendData.append(",");
+
+            sendData.append(std::to_string(qi));
+            sendData.append(",");
+
+            sendData.append(std::to_string(decider->getN()));
+            sendData.append(",");
+
+            sendData.append(std::to_string(RSUprices[id]));
+            sendData.append(",");
+
+
+            sendData.append(std::to_string(VinLya));
+            sendData.append(",");
+
+            sendData.append(std::to_string(decider->getQbyIndex(2)));
+
+            std::string recev=UDPServer(sendData);
+            std::stringstream ss;
+            ss<<recev;
+            double K;
+            ss>>K;
+
 
             delay=K*tsk->getMi()/qi/10000;
 
             double temSW=delay;
-            double nowdr=RSUdatarates[id]*pow(rateLossRate,vehicleSpeed*0.36);
-            double dtt=5000/1024.0/nowdr;
+
             delay=delay+dtt+migrationDelay+2*5000/1024.0/500000*8;
 
             double temW=delay;
@@ -396,6 +471,7 @@ int CarApplMAOCO::choseOffloadRSUbyLyapunov2(TaskRequest* tsk){
                 deTW=5000/1024.0/nowdr;
                 deCO=cost;
 
+
             }
         }
     }
@@ -417,10 +493,14 @@ int CarApplMAOCO::choseOffloadRSUbyLyapunov2(TaskRequest* tsk){
     decider->updateQ(addQy);
     VirtualQueue1.record(decider->getQbyIndex(1));
     VirtualQueue2.record(decider->getQbyIndex(2));
+    testVector1.record(MMK);
+    testVector2.record(bestK);
+
     return maxUtiRSU;
 
 
 }
+
 
 
 int CarApplMAOCO::choseOffloadRSUbyGreddy(TaskRequest* tsk){
@@ -446,7 +526,6 @@ int CarApplMAOCO::choseOffloadRSUbyGreddy(TaskRequest* tsk){
             double delay;
             double priceRate=RSUprices[id]/dss->getMu();
             //double K=decider->findBestKbyIterawithPlayerMath3(qi,priceRate,dss);
-            double K=1;
             double nowdr=RSUdatarates[id]*pow(rateLossRate,vehicleSpeed*0.36);
             double dtt=5000/1024.0/nowdr;
 
@@ -474,12 +553,11 @@ int CarApplMAOCO::choseOffloadRSUbyGreddy(TaskRequest* tsk){
 
             sendData.append(std::to_string(RSUprices[id]));
 
-
-
-
-
-
-            UDPServer(sendData);
+            std::string recev=UDPServer(sendData);
+            std::stringstream ss;
+            ss<<recev;
+            double K;
+            ss>>K;
 
             delay=K*tsk->getMi()/qi/10000;
             double temSW=delay;
@@ -506,14 +584,48 @@ int CarApplMAOCO::choseOffloadRSUbyGreddy(TaskRequest* tsk){
             double delay;
             double priceRate=RSUprices[id]/dss->getMu()+0.1;
 
-            double K=decider->findBestKbyIterawithPlayerMath3(qi,priceRate,dss);
+            double nowdr=RSUdatarates[id]*pow(rateLossRate,vehicleSpeed*0.36);
+            double dtt=5000/1024.0/nowdr;
+
+            std::string sendData="";
+            sendData.append(std::to_string(alphainLya));
+            sendData.append(",");
+
+            sendData.append(std::to_string(betainLya));
+            sendData.append(",");
+
+            sendData.append(std::to_string(gammainLya));
+            sendData.append(",");
+
+            sendData.append(std::to_string(dtt+migrationDelay+2*5000/1024.0/500000*8));
+            sendData.append(",");
+
+            sendData.append(std::to_string(dss->getMu()));
+            sendData.append(",");
+
+            sendData.append(std::to_string(qi));
+            sendData.append(",");
+
+            sendData.append(std::to_string(decider->getN()));
+            sendData.append(",");
+
+            sendData.append(std::to_string(RSUprices[id]));
+
+            std::string recev=UDPServer(sendData);
+            std::stringstream ss;
+            ss<<recev;
+            double K;
+            ss>>K;
+
+
+
+//            double K=decider->findBestKbyIterawithPlayerMath3(qi,priceRate,dss);
 
             delay=K*tsk->getMi()/qi/10000;
 
             double temSW=delay;
-            double nowdr=RSUdatarates[id]*pow(rateLossRate,vehicleSpeed*0.36);
-            double dtt=5000/1024.0/nowdr;
             delay=delay+dtt+migrationDelay+2*5000/1024.0/500000*8;
+
 
             double temW=delay;
 
@@ -661,6 +773,9 @@ void CarApplMAOCO::handleSelfMsg(cMessage* msg) {
         case GREDDY:
             chosenRSUID=choseOffloadRSUbyGreddy(tsk);
             break;
+        case LYAPUNOVMATLAB:
+            chosenRSUID=choseOffloadRSUbyLyapunovMATLAB(tsk);
+            break;
         default:
             chosenRSUID=choseOffloadRSU(tsk,currentRSUID);
             break;
@@ -753,7 +868,7 @@ void CarApplMAOCO::initialize(int stage) {
 /**********************MAOCO************************************/
         //MAOCO related
         decider=new MAOCOdecider();
-        double VinLya=par("VinLya");
+        VinLya=par("VinLya");
         ReV=VinLya;
         decider->setV(VinLya);
         alphainLya=par("alphainLya");
